@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purely</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="purely-header">
+    <img src="../../assets/icons/icon48.png" alt="Purely" class="purely-logo" />
+    <div class="purely-header-text-wrap">
+      <h1 data-i18n="brand.name">Purely</h1>
+      <p class="purely-sub" data-i18n="brand.tagline">Clean pages for Print &amp; PDF</p>
+    </div>
+    <div class="purely-lang-switch" id="langSwitch" role="group" aria-label="Language">
+      <button type="button" data-lang="en" class="active">EN</button>
+      <button type="button" data-lang="he">עב</button>
+    </div>
+  </header>
+
+  <main>
+    <div class="purely-row purely-toggle-row">
+      <label class="purely-switch">
+        <input type="checkbox" id="cleanToggle" />
+        <span class="purely-slider"></span>
+      </label>
+      <div>
+        <div class="purely-row-title" data-i18n="popup.toggleTitle">Clean this page</div>
+        <div class="purely-row-hint" id="statusHint" data-i18n="popup.statusChecking">Checking status...</div>
+      </div>
+    </div>
+
+    <div class="purely-segmented" id="modeSegmented">
+      <button type="button" data-mode="declutter" class="active" data-i18n="popup.modeDeclutter">Declutter only</button>
+      <button type="button" data-mode="reader" data-i18n="popup.modeReader">Reader mode</button>
+    </div>
+
+    <div class="purely-typography" id="typographyPanel" hidden>
+      <div class="purely-typography-title" data-i18n="popup.typographyTitle">Reading size</div>
+      <div class="purely-stepper-row">
+        <span class="purely-stepper-label" data-i18n="popup.fontSizeLabel">Text size</span>
+        <div class="purely-stepper">
+          <button type="button" class="purely-stepper-btn" id="fontSizeDown" aria-label="-">−</button>
+          <span class="purely-stepper-value" id="fontSizeValue">17</span>
+          <button type="button" class="purely-stepper-btn" id="fontSizeUp" aria-label="+">+</button>
+        </div>
+      </div>
+      <div class="purely-stepper-row">
+        <span class="purely-stepper-label" data-i18n="popup.lineHeightLabel">Line spacing</span>
+        <div class="purely-stepper">
+          <button type="button" class="purely-stepper-btn" id="lineHeightDown" aria-label="-">−</button>
+          <span class="purely-stepper-value" id="lineHeightValue">1.7</span>
+          <button type="button" class="purely-stepper-btn" id="lineHeightUp" aria-label="+">+</button>
+        </div>
+      </div>
+    </div>
+
+    <button id="exportBtn" class="purely-btn purely-btn-primary">
+      <span class="purely-spinner"></span>
+      <span class="purely-btn-label" data-i18n="popup.exportButton">Export clean PDF</span>
+    </button>
+
+    <button id="restoreBtn" class="purely-btn purely-btn-secondary">
+      <span class="purely-spinner"></span>
+      <span class="purely-btn-label" data-i18n="popup.restoreButton">Restore original page</span>
+    </button>
+
+    <button id="pickBtn" class="purely-btn purely-btn-outline" title="" data-i18n-title="popup.pickHint">
+      <span class="purely-btn-label" data-i18n="popup.pickButton">Pick element to remove</span>
+    </button>
+
+    <p class="purely-tip" id="tipText"></p>
+  </main>
+
+  <footer>
+    <div class="purely-footer-links">
+      <button id="optionsBtn" class="purely-link-btn" data-i18n="popup.optionsLink">Settings</button>
+      <span class="purely-footer-dot">·</span>
+      <button id="helpBtn" class="purely-link-btn" data-i18n="popup.helpLink">Help</button>
+    </div>
+    <div class="purely-footer-meta">
+      <span class="purely-shortcut-hint" id="shortcutHint">Ctrl+Shift+P = Clean + PDF</span>
+      <span class="purely-version" id="versionText"></span>
+    </div>
+  </footer>
+
+  <script src="../shared/i18n.js"></script>
+  <script src="../shared/selectors.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

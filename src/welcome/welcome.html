@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to Purely</title>
+  <link rel="stylesheet" href="welcome.css" />
+</head>
+<body>
+  <div class="purely-lang-switch" id="langSwitch" role="group" aria-label="Language">
+    <button type="button" data-lang="en" class="active">EN</button>
+    <button type="button" data-lang="he">עב</button>
+  </div>
+
+  <main class="purely-welcome">
+    <div class="purely-hero">
+      <img src="../../assets/icons/icon128.png" alt="Purely" class="purely-hero-logo" />
+      <h1 data-i18n="welcome.heroTitle">Welcome to Purely</h1>
+      <p class="purely-hero-sub" data-i18n="welcome.heroSub">Purely strips ads, navigation and pop-ups from any web page, then gets it ready for print or a clean PDF - with your own logo.</p>
+    </div>
+
+    <div class="purely-steps">
+      <div class="purely-step">
+        <div class="purely-step-num">1</div>
+        <h3 data-i18n="welcome.step1Title">Clean with one click</h3>
+        <p data-i18n="welcome.step1Body">Click the Purely icon in your toolbar (you may need to pin it 📌) and turn on "Clean this page".</p>
+      </div>
+      <div class="purely-step">
+        <div class="purely-step-num">2</div>
+        <h3 data-i18n="welcome.step2Title">Pick a mode</h3>
+        <p data-i18n="welcome.step2Body">"Declutter only" keeps the original layout. "Reader mode" rebuilds a fully clean reading view - like Reader View.</p>
+      </div>
+      <div class="purely-step">
+        <div class="purely-step-num">3</div>
+        <h3 data-i18n="welcome.step3Title">Export a branded PDF</h3>
+        <p data-i18n="welcome.step3Body">Click "Export clean PDF" - the print dialog opens with your logo and header. Choose "Save as PDF" and you're done.</p>
+      </div>
+    </div>
+
+    <div class="purely-tip-box" data-i18n="welcome.tip" data-i18n-html>
+      💡 Tip: right-click any page and choose Purely from the menu, or use the keyboard shortcuts <kbd>Ctrl+Shift+K</kbd> to clean quickly and <kbd>Ctrl+Shift+P</kbd> to clean + PDF.
+    </div>
+
+    <div class="purely-cta-row">
+      <button id="openOptions" class="purely-btn purely-btn-primary" data-i18n="welcome.openSettings">Open full settings</button>
+      <button id="openHelp" class="purely-btn purely-btn-secondary" data-i18n="welcome.openHelp">Help &amp; FAQ</button>
+      <button id="closeTab" class="purely-btn purely-btn-secondary" data-i18n="welcome.start">Start browsing</button>
+    </div>
+
+    <p class="purely-privacy-line" data-i18n="welcome.privacyLine">🔒 Purely runs entirely locally in your browser - no external servers, no data collection.</p>
+    <p class="purely-version-line" id="versionLine"></p>
+  </main>
+
+  <script src="../shared/i18n.js"></script>
+  <script src="welcome.js"></script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+:root {
+  --purely-primary: #0d9488;
+  --purely-primary-dark: #0f766e;
+  --purely-primary-soft: #f0fdfa;
+  --purely-bg: #f8fafc;
+  --purely-surface: #ffffff;
+  --purely-text: #0f172a;
+  --purely-muted: #64748b;
+  --purely-border: #e2e8f0;
+}
+
+/* Follows the OS theme by default; overridden by an explicit choice via [data-theme]
+   (set from Purely's settings) in either direction. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --purely-primary: #14b8a6;
+    --purely-primary-dark: #0d9488;
+    --purely-primary-soft: rgba(20, 184, 166, 0.12);
+    --purely-bg: #0b1220;
+    --purely-surface: #1e293b;
+    --purely-text: #f1f5f9;
+    --purely-muted: #94a3b8;
+    --purely-border: #334155;
+  }
+}
+:root[data-theme="dark"] {
+  --purely-primary: #14b8a6;
+  --purely-primary-dark: #0d9488;
+  --purely-primary-soft: rgba(20, 184, 166, 0.12);
+  --purely-bg: #0b1220;
+  --purely-surface: #1e293b;
+  --purely-text: #f1f5f9;
+  --purely-muted: #94a3b8;
+  --purely-border: #334155;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--purely-bg);
+  font-family: "Segoe UI", Arial, "Heebo", sans-serif;
+  color: var(--purely-text);
+}
+
+.purely-lang-switch {
+  position: fixed;
+  top: 16px;
+  inset-inline-end: 16px;
+  display: flex;
+  background: var(--purely-surface);
+  border: 1px solid var(--purely-border);
+  border-radius: 20px;
+  padding: 3px;
+  gap: 2px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.purely-lang-switch button {
+  border: none;
+  background: transparent;
+  color: var(--purely-muted);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.purely-lang-switch button.active {
+  background: var(--purely-primary);
+  color: #fff;
+}
+
+.purely-welcome {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 48px 24px 60px;
+}
+
+.purely-hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.purely-hero-logo {
+  width: 84px;
+  height: 84px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(13, 148, 136, 0.25);
+  margin-bottom: 16px;
+}
+
+.purely-hero h1 {
+  margin: 0 0 10px;
+  font-size: 28px;
+}
+
+.purely-hero-sub {
+  margin: 0 auto;
+  max-width: 480px;
+  color: var(--purely-muted);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.purely-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.purely-step {
+  background: var(--purely-surface);
+  border: 1px solid var(--purely-border);
+  border-radius: 14px;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.purely-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--purely-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  margin: 0 auto 12px;
+}
+
+.purely-step h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+}
+
+.purely-step p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--purely-muted);
+  line-height: 1.6;
+}
+
+.purely-tip-box {
+  background: var(--purely-primary-soft);
+  border: 1px solid var(--purely-border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 13px;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+.purely-tip-box kbd {
+  background: var(--purely-surface);
+  border: 1px solid var(--purely-border);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: monospace;
+  font-size: 12px;
+  direction: ltr;
+  display: inline-block;
+}
+
+.purely-cta-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.purely-btn {
+  padding: 11px 22px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+.purely-btn:active { transform: scale(0.98); }
+
+.purely-btn-primary {
+  background: var(--purely-primary);
+  color: #fff;
+}
+
+.purely-btn-primary:hover { background: var(--purely-primary-dark); }
+
+.purely-btn-secondary {
+  background: transparent;
+  color: var(--purely-text);
+  border: 1px solid var(--purely-border);
+}
+
+.purely-btn-secondary:hover { background: var(--purely-primary-soft); }
+
+.purely-privacy-line,
+.purely-version-line {
+  text-align: center;
+  font-size: 12px;
+  color: var(--purely-muted);
+  margin: 4px 0;
+}
+
+@media (max-width: 640px) {
+  .purely-steps { grid-template-columns: 1fr; }
+}

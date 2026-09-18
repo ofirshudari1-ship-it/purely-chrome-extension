@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purely Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <header class="purely-page-header">
+    <img src="../../assets/icons/icon48.png" alt="Purely" />
+    <div class="purely-page-header-text">
+      <h1 data-i18n="options.pageTitle">Purely Settings</h1>
+      <p data-i18n="options.pageSubtitle">Full control over what gets cleaned, how it looks, and how your PDF is branded.</p>
+    </div>
+    <div class="purely-lang-switch" id="langSwitch" role="group" aria-label="Language">
+      <button type="button" data-lang="en" class="active">EN</button>
+      <button type="button" data-lang="he">עב</button>
+    </div>
+  </header>
+
+  <nav class="purely-quicknav" aria-label="Quick navigation">
+    <a href="#section-categories" data-i18n="options.navCategories">Categories</a>
+    <a href="#section-mode" data-i18n="options.navMode">Mode</a>
+    <a href="#section-customcss" data-i18n="options.navCustomCss">Custom CSS</a>
+    <a href="#section-autoclean" data-i18n="options.navAutoClean">Auto-clean</a>
+    <a href="#section-branding" data-i18n="options.navBranding">PDF branding</a>
+    <a href="#section-appearance" data-i18n="options.navAppearance">Appearance</a>
+    <a href="#section-persite" data-i18n="options.navPerSite">Per-site removals</a>
+    <a href="../help/help.html" target="_blank" rel="noopener" data-i18n="options.navHelp">Help</a>
+  </nav>
+
+  <main class="purely-container">
+
+    <section class="purely-card" id="section-categories">
+      <h2 data-i18n="options.section1.title">1. Categories to clean</h2>
+      <p class="purely-hint" data-i18n="options.section1.hint">Choose which kinds of elements get removed when you clean a page.</p>
+      <div id="categoriesGrid" class="purely-checks-grid"></div>
+    </section>
+
+    <section class="purely-card" id="section-mode">
+      <h2 data-i18n="options.section2.title">2. Default mode</h2>
+      <p class="purely-hint" data-i18n="options.section2.hint">"Declutter only" keeps the page's original layout. "Reader mode" rebuilds a fully clean reading view (like Reader View).</p>
+      <div class="purely-radio-row">
+        <label><input type="radio" name="mode" value="declutter" /> <span data-i18n="options.modeDeclutterLabel">Declutter only (keeps layout)</span></label>
+        <label><input type="radio" name="mode" value="reader" /> <span data-i18n="options.modeReaderLabel">Reader mode (reading layout)</span></label>
+      </div>
+      <label class="purely-checkbox-row">
+        <input type="checkbox" id="rememberModePerSite" />
+        <span data-i18n="options.rememberModePerSite">Remember the mode I choose, per site</span>
+      </label>
+      <p class="purely-hint" data-i18n="options.rememberModePerSiteHint" style="margin:4px 0 0;">When on, switching mode from the popup on a specific site is remembered for that site - other sites keep using the default above.</p>
+    </section>
+
+    <section class="purely-card" id="section-customcss">
+      <h2 data-i18n="options.section3.title">3. Custom CSS selectors</h2>
+      <p class="purely-hint" data-i18n="options.section3.hint">Advanced: one selector per line. "Always remove" overrides the defaults; "Always keep" blocks removal even if the category is checked.</p>
+      <div class="purely-two-col">
+        <div>
+          <label class="purely-label" data-i18n="options.customRemoveLabel">Always remove (one CSS selector per line)</label>
+          <textarea id="customRemove" class="purely-code-input" rows="4" placeholder=".my-custom-banner&#10;#annoying-widget"></textarea>
+          <div class="purely-field-error" id="customRemoveError"></div>
+        </div>
+        <div>
+          <label class="purely-label" data-i18n="options.customKeepLabel">Always keep (one CSS selector per line)</label>
+          <textarea id="customKeep" class="purely-code-input" rows="4" placeholder="#main-table&#10;.important-chart"></textarea>
+          <div class="purely-field-error" id="customKeepError"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="purely-card" id="section-autoclean">
+      <h2 data-i18n="options.section4.title">4. Auto-clean on domains</h2>
+      <p class="purely-hint" data-i18n="options.section4.hint">Pages on this list are cleaned automatically as soon as they load, no click needed. Requires site access permission (you'll be asked when you click the button).</p>
+      <div class="purely-add-row">
+        <input type="text" id="domainInput" class="purely-code-input" placeholder="example.com" data-i18n-placeholder="options.domainPlaceholder" />
+        <button id="addDomainBtn" class="purely-btn purely-btn-secondary" data-i18n="options.addButton">Add</button>
+      </div>
+      <div class="purely-field-error" id="domainError"></div>
+      <ul id="domainList" class="purely-domain-list"></ul>
+      <button id="grantPermissionBtn" class="purely-btn purely-btn-outline" data-i18n="options.grantPermission">Grant site access permission</button>
+      <span id="permissionStatus" class="purely-hint"></span>
+    </section>
+
+    <section class="purely-card" id="section-branding">
+      <h2 data-i18n="options.section5.title">5. PDF branding</h2>
+      <p class="purely-hint" data-i18n="options.section5.hint">Add a logo and fixed text that will appear in the header/footer of every PDF you export.</p>
+
+      <div class="purely-logo-row">
+        <div id="logoPreview" class="purely-logo-preview" data-i18n="options.noLogo">No logo</div>
+        <div class="purely-logo-controls">
+          <input type="file" id="logoInput" accept="image/png,image/jpeg,image/svg+xml,image/webp" />
+          <button id="removeLogoBtn" class="purely-btn purely-btn-outline" data-i18n="options.removeLogo">Remove logo</button>
+        </div>
+      </div>
+      <div class="purely-field-error" id="logoError"></div>
+
+      <label class="purely-label" data-i18n="options.headerTextLabel">Header text (default: page title)</label>
+      <input type="text" id="headerText" dir="auto" placeholder="e.g. My Company Name" data-i18n-placeholder="options.headerTextPlaceholder" />
+
+      <label class="purely-label" data-i18n="options.footerTextLabel">Footer text</label>
+      <input type="text" id="footerText" dir="auto" placeholder="Generated with Purely" data-i18n-placeholder="options.footerTextPlaceholder" />
+
+      <div class="purely-checks-grid">
+        <label><input type="checkbox" id="showDate" /> <span data-i18n="options.showDate">Show date</span></label>
+        <label><input type="checkbox" id="showUrl" /> <span data-i18n="options.showUrl">Show page URL</span></label>
+        <label><input type="checkbox" id="showPageTitle" /> <span data-i18n="options.showPageTitle">Show page title</span></label>
+      </div>
+    </section>
+
+    <section class="purely-card" id="section-appearance">
+      <h2 data-i18n="options.section6.title">6. Appearance</h2>
+      <p class="purely-hint" data-i18n="options.section6.hint">Choose how Purely's own popup, settings, welcome and help pages look - independent of your system's theme.</p>
+      <div class="purely-radio-row">
+        <label><input type="radio" name="theme" value="system" /> <span data-i18n="options.themeSystem">Match system</span></label>
+        <label><input type="radio" name="theme" value="light" /> <span data-i18n="options.themeLight">Light</span></label>
+        <label><input type="radio" name="theme" value="dark" /> <span data-i18n="options.themeDark">Dark</span></label>
+      </div>
+    </section>
+
+    <section class="purely-card" id="section-persite">
+      <h2 data-i18n="options.section7.title">7. Per-site removals (from "Pick element to remove")</h2>
+      <p class="purely-hint" data-i18n="options.section7.hint">Elements you picked directly on a page (popup → "Pick element to remove") are remembered per site and applied automatically every time you clean that site. Remove any of them here.</p>
+      <ul id="perSiteList" class="purely-domain-list purely-persite-list"></ul>
+    </section>
+
+    <div class="purely-actions-bar">
+      <button id="saveBtn" class="purely-btn purely-btn-primary" data-i18n="options.save">Save settings</button>
+      <button id="resetBtn" class="purely-btn purely-btn-secondary" data-i18n="options.reset">Reset to defaults</button>
+      <span class="purely-dirty-indicator" id="dirtyIndicator"><span class="purely-dirty-dot"></span> <span data-i18n="options.unsavedChanges">You have unsaved changes</span></span>
+      <span id="saveStatus" class="purely-save-status"></span>
+    </div>
+
+    <section class="purely-card purely-privacy-note">
+      <h2 data-i18n="options.privacyTitle">🔒 Privacy</h2>
+      <p data-i18n="options.privacyBody">Purely runs entirely locally in your browser. It never sends data to an external server, collects no analytics, and your logo/settings are stored only on your computer (chrome.storage.local).</p>
+    </section>
+
+    <section class="purely-card purely-help-note">
+      <h2>❓ <span data-i18n="help.pageTitle">Purely Help &amp; FAQ</span></h2>
+      <p data-i18n="help.pageSubtitle">Everything you need to get the most out of Purely.</p>
+      <a href="../help/help.html" target="_blank" rel="noopener" class="purely-btn purely-btn-outline" data-i18n="options.navHelp">Help</a>
+    </section>
+  </main>
+
+  <footer class="purely-page-footer" id="pageFooter"></footer>
+
+  <script src="../shared/i18n.js"></script>
+  <script src="../shared/selectors.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

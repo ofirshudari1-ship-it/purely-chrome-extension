@@ -1,0 +1,515 @@
+:root {
+  --purely-primary: #0d9488;
+  --purely-primary-dark: #0f766e;
+  --purely-primary-soft: #f0fdfa;
+  --purely-bg: #f8fafc;
+  --purely-surface: #ffffff;
+  --purely-surface-2: #eef2f6;
+  --purely-surface-hover: #e2e8f0;
+  --purely-text: #0f172a;
+  --purely-muted: #64748b;
+  --purely-border: #e2e8f0;
+  --purely-danger: #dc2626;
+  --purely-danger-soft: #fef2f2;
+  --purely-focus: rgba(13, 148, 136, 0.35);
+}
+
+/* Follows the OS theme by default; overridden by an explicit choice via [data-theme]
+   (the "Appearance" setting below) in either direction. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --purely-primary: #14b8a6;
+    --purely-primary-dark: #0d9488;
+    --purely-primary-soft: rgba(20, 184, 166, 0.12);
+    --purely-bg: #0b1220;
+    --purely-surface: #1e293b;
+    --purely-surface-2: #263447;
+    --purely-surface-hover: #2c3b50;
+    --purely-text: #f1f5f9;
+    --purely-muted: #94a3b8;
+    --purely-border: #334155;
+    --purely-danger: #f87171;
+    --purely-danger-soft: rgba(248, 113, 113, 0.12);
+  }
+}
+:root[data-theme="dark"] {
+  --purely-primary: #14b8a6;
+  --purely-primary-dark: #0d9488;
+  --purely-primary-soft: rgba(20, 184, 166, 0.12);
+  --purely-bg: #0b1220;
+  --purely-surface: #1e293b;
+  --purely-surface-2: #263447;
+  --purely-surface-hover: #2c3b50;
+  --purely-text: #f1f5f9;
+  --purely-muted: #94a3b8;
+  --purely-border: #334155;
+  --purely-danger: #f87171;
+  --purely-danger-soft: rgba(248, 113, 113, 0.12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--purely-bg);
+  font-family: "Segoe UI", Arial, "Heebo", sans-serif;
+  color: var(--purely-text);
+}
+
+button {
+  transition: background-color 0.15s ease, opacity 0.15s ease, transform 0.05s ease;
+}
+
+button:active:not(:disabled) { transform: scale(0.98); }
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--purely-focus);
+  outline-offset: 1px;
+}
+
+.purely-page-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 28px;
+  background: linear-gradient(135deg, var(--purely-primary), var(--purely-primary-dark));
+  color: #fff;
+}
+
+.purely-page-header img {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex: none;
+}
+
+.purely-page-header h1 {
+  margin: 0 0 2px;
+  font-size: 20px;
+}
+
+.purely-page-header p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+.purely-page-header-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.purely-lang-switch {
+  display: flex;
+  flex: none;
+  background: rgba(255,255,255,0.18);
+  border-radius: 20px;
+  padding: 2px;
+  gap: 2px;
+}
+
+.purely-lang-switch button {
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.85);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.purely-lang-switch button.active {
+  background: rgba(255,255,255,0.95);
+  color: var(--purely-primary-dark);
+}
+
+.purely-quicknav {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 10px 20px;
+  background: var(--purely-bg);
+  border-bottom: 1px solid var(--purely-border);
+}
+
+.purely-quicknav a {
+  flex: none;
+  font-size: 12.5px;
+  color: var(--purely-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--purely-surface);
+  border: 1px solid var(--purely-border);
+  white-space: nowrap;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.purely-quicknav a:hover {
+  color: var(--purely-text);
+  background: var(--purely-surface-hover);
+  border-color: var(--purely-primary);
+}
+
+.purely-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.purely-card {
+  background: var(--purely-surface);
+  border: 1px solid var(--purely-border);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin-bottom: 18px;
+  scroll-margin-top: 60px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.purely-card:hover {
+  border-color: color-mix(in srgb, var(--purely-primary) 35%, var(--purely-border));
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+}
+
+.purely-card h2 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.purely-hint {
+  font-size: 12.5px;
+  color: var(--purely-muted);
+  margin: 0 0 12px;
+}
+
+.purely-checks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+}
+
+.purely-checks-grid label {
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.purely-radio-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13.5px;
+}
+
+.purely-radio-row label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.purely-radio-row label:has(input:checked) {
+  background: var(--purely-primary-soft);
+  border-color: var(--purely-primary);
+}
+
+.purely-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  margin-top: 12px;
+}
+
+.purely-two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.purely-label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin: 10px 0 4px;
+}
+
+textarea, input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--purely-border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  background: var(--purely-surface);
+  color: var(--purely-text);
+}
+
+/* Selectors, domain names and other code-like values always stay LTR,
+   regardless of the current UI language. */
+.purely-code-input {
+  direction: ltr;
+  text-align: left;
+  font-family: "Consolas", "SFMono-Regular", Menlo, monospace;
+}
+
+textarea.has-error {
+  border-color: var(--purely-danger);
+  background: var(--purely-danger-soft);
+}
+
+.purely-field-error {
+  font-size: 11.5px;
+  color: var(--purely-danger);
+  margin-top: 4px;
+  min-height: 14px;
+}
+
+.purely-add-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.purely-add-row input {
+  flex: 1;
+}
+
+.purely-domain-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.purely-domain-list li {
+  background: var(--purely-surface-2);
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 12.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  direction: ltr;
+}
+
+.purely-domain-list .purely-empty {
+  background: none;
+  color: var(--purely-muted);
+  font-style: italic;
+}
+
+.purely-domain-list button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--purely-danger);
+  font-size: 13px;
+  padding: 0;
+}
+
+/* Per-site picked-element removals - full-width rows (host + selector can be long),
+   unlike the compact wrapping pills used for the plain domain list above. */
+.purely-persite-list {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.purely-persite-list li {
+  border-radius: 8px;
+  justify-content: space-between;
+}
+
+.purely-persite-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.purely-persite-host {
+  flex: none;
+  font-weight: 600;
+  color: var(--purely-text);
+}
+
+.purely-persite-selector {
+  color: var(--purely-muted);
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.purely-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.purely-logo-preview {
+  width: 90px;
+  height: 60px;
+  border: 1px dashed var(--purely-border);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--purely-muted);
+  overflow: hidden;
+  flex: none;
+  background: var(--purely-surface-2);
+}
+
+.purely-logo-preview img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.purely-logo-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.purely-btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.purely-btn-primary {
+  background: var(--purely-primary);
+  color: #fff;
+}
+
+.purely-btn-primary:hover:not(:disabled) { background: var(--purely-primary-dark); }
+
+.purely-btn-secondary {
+  background: var(--purely-surface-2);
+  color: var(--purely-text);
+}
+
+.purely-btn-secondary:hover:not(:disabled) { background: var(--purely-surface-hover); }
+
+.purely-btn-outline {
+  background: var(--purely-surface);
+  color: var(--purely-primary-dark);
+  border: 1px solid var(--purely-primary);
+}
+
+.purely-btn-outline:hover:not(:disabled) { background: var(--purely-primary-soft); }
+
+.purely-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.purely-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.purely-save-status {
+  font-size: 12.5px;
+  color: var(--purely-primary-dark);
+  font-weight: 600;
+  min-height: 16px;
+}
+
+.purely-save-status.is-error { color: var(--purely-danger); }
+
+.purely-dirty-indicator {
+  font-size: 12px;
+  color: var(--purely-muted);
+  display: none;
+  align-items: center;
+  gap: 5px;
+}
+
+.purely-dirty-indicator.is-visible {
+  display: flex;
+  animation: purely-fade-in 0.2s ease-out;
+}
+
+@keyframes purely-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.purely-dirty-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #f59e0b;
+  flex: none;
+  animation: purely-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes purely-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.purely-privacy-note {
+  background: var(--purely-primary-soft);
+  border-color: #99f6e4;
+}
+
+.purely-privacy-note p {
+  font-size: 12.5px;
+  color: var(--purely-text);
+  margin: 0;
+  opacity: 0.85;
+}
+
+.purely-page-footer {
+  text-align: center;
+  padding: 6px 0 20px;
+  font-size: 11.5px;
+  color: var(--purely-muted);
+}
+
+.purely-page-footer a {
+  color: var(--purely-primary-dark);
+}
+
+.purely-help-note {
+  text-align: center;
+}
+
+.purely-help-note h2 {
+  justify-content: center;
+}
+
+.purely-help-note .purely-btn {
+  display: inline-block;
+  text-decoration: none;
+  margin-top: 6px;
+}

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Purely Help &amp; FAQ</title>
+  <link rel="stylesheet" href="help.css" />
+</head>
+<body>
+  <header class="purely-page-header">
+    <img src="../../assets/icons/icon48.png" alt="Purely" />
+    <div class="purely-page-header-text">
+      <h1 data-i18n="help.pageTitle">Purely Help &amp; FAQ</h1>
+      <p data-i18n="help.pageSubtitle">Everything you need to get the most out of Purely.</p>
+    </div>
+    <div class="purely-lang-switch" id="langSwitch" role="group" aria-label="Language">
+      <button type="button" data-lang="en" class="active">EN</button>
+      <button type="button" data-lang="he">עב</button>
+    </div>
+  </header>
+
+  <main class="purely-container">
+
+    <section class="purely-card">
+      <h2 data-i18n="help.gettingStartedTitle">Getting started</h2>
+      <ol class="purely-steps-list">
+        <li data-i18n="help.gettingStarted1">Click the Purely icon in the toolbar and turn on "Clean this page" to hide ads, navigation and pop-ups.</li>
+        <li data-i18n="help.gettingStarted2">Pick "Declutter only" to keep the original layout, or "Reader mode" for a fully clean reading view.</li>
+        <li data-i18n="help.gettingStarted3">Click "Export clean PDF" to open the print dialog with your branding already applied - choose "Save as PDF".</li>
+      </ol>
+    </section>
+
+    <section class="purely-card">
+      <h2 data-i18n="help.shortcutsTitle">Keyboard shortcuts</h2>
+      <table class="purely-shortcuts-table">
+        <tbody>
+          <tr>
+            <td data-i18n="help.shortcutClean">Clean the current page</td>
+            <td><kbd id="shortcutClean">Ctrl+Shift+K</kbd></td>
+          </tr>
+          <tr>
+            <td data-i18n="help.shortcutPrint">Clean the page and open print / PDF export</td>
+            <td><kbd id="shortcutPrint">Ctrl+Shift+P</kbd></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="purely-hint" data-i18n="help.shortcutsNote">You can change these shortcuts any time at chrome://extensions/shortcuts.</p>
+    </section>
+
+    <section class="purely-card">
+      <h2 data-i18n="help.faqTitle">Frequently asked questions</h2>
+
+      <details class="purely-faq-item" open>
+        <summary data-i18n="help.faq1Q">Does Purely send my browsing data anywhere?</summary>
+        <p data-i18n="help.faq1A">No. Purely runs entirely inside your browser. It never sends page content, browsing history, or settings to any external server. Your logo and settings are stored only on your own computer.</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq8Q">Does "Reader mode" use AI, or send my page to a server to be analyzed?</summary>
+        <p data-i18n="help.faq8A">No. Reader mode uses a scoring engine that runs entirely inside your browser - it weighs things like paragraph density, link ratio, and common class/id naming patterns to guess which part of the page is the real article, similar in spirit to Firefox's Reader View. It is not a hosted AI/LLM model, and the page is never sent anywhere for it to work - the whole point of Purely is that nothing leaves your browser.</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq2Q">Cleaning didn't remove something on a specific site - what can I do?</summary>
+        <p data-i18n="help.faq2A">Open Settings → "Custom CSS selectors" and add a CSS selector for that element under "Always remove". If you're not sure of the selector, right-click the element, choose Inspect, and copy a class or id from the highlighted HTML.</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq9Q">Is there an easier way than writing a CSS selector by hand?</summary>
+        <p data-i18n="help.faq9A">Yes - click "Pick element to remove" in the popup, then click the element on the page. It's hidden immediately and remembered automatically for that site, so it stays hidden on every future visit. Manage or undo any of these per-site picks any time in Settings → "Per-site removals".</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq3Q">Cleaning removed something I actually wanted to keep - what can I do?</summary>
+        <p data-i18n="help.faq3A">Add that element's CSS selector under "Always keep" in Settings → "Custom CSS selectors". It will never be hidden, even if its category is enabled.</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq4Q">How do I add my logo to exported PDFs?</summary>
+        <p data-i18n="help.faq4A">Open Settings → "PDF branding", upload a logo image (PNG/JPG/SVG/WebP, up to 2MB), and optionally set header/footer text. It will appear only in the printed/PDF version, never while browsing.</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq5Q">How do I make a site clean automatically, without clicking anything?</summary>
+        <p data-i18n="help.faq5A">Open Settings → "Auto-clean on domains", add the domain, and click "Grant site access permission" once. From then on, that site is cleaned automatically on every page load.</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq6Q">How do I update Purely without losing my settings?</summary>
+        <p data-i18n="help.faq6A">Just replace the extension folder with the new version's files, then click the reload icon (⟳) on the Purely card at chrome://extensions. No need to remove and re-add it - your settings, logo and domain list all stay exactly as they were.</p>
+      </details>
+
+      <details class="purely-faq-item">
+        <summary data-i18n="help.faq7Q">Why can't Purely clean chrome:// pages or the Chrome Web Store?</summary>
+        <p data-i18n="help.faq7A">Chrome blocks extensions from running on its own internal pages and on the Web Store, for security reasons. This isn't something Purely can work around.</p>
+      </details>
+    </section>
+
+    <div class="purely-help-actions">
+      <button id="backToSettings" class="purely-btn purely-btn-primary" data-i18n="help.backToSettings">← Back to settings</button>
+      <button id="closeTab" class="purely-btn purely-btn-secondary" data-i18n="help.backToPopup">Close</button>
+    </div>
+
+    <p class="purely-privacy-line" data-i18n="welcome.privacyLine">🔒 Purely runs entirely locally in your browser - no external servers, no data collection.</p>
+  </main>
+
+  <script src="../shared/i18n.js"></script>
+  <script src="help.js"></script>
+</body>
+</html>

@@ -1,0 +1,745 @@
+<meta charset="UTF-8" />
+<title>Purely</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,500&family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#faf8f3;
+    --paper-raised:#ffffff;
+    --ink:#1a1917;
+    --ink-soft:#635e54;
+    --ink-faint:#8d877a;
+    --line:#e4dfd3;
+    --teal:#0d9488;
+    --teal-deep:#0b6f66;
+    --teal-pale:#e3f3f1;
+    --clutter:#b8452f;
+    --clutter-pale:#f6e4de;
+    --shadow: 0 1px 2px rgba(26,25,23,.04), 0 8px 24px -12px rgba(26,25,23,.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#161410;
+      --paper-raised:#201d17;
+      --ink:#f1ece0;
+      --ink-soft:#aba394;
+      --ink-faint:#7c7568;
+      --line:#332d22;
+      --teal:#2dd4bf;
+      --teal-deep:#5eead4;
+      --teal-pale:rgba(45,212,191,.12);
+      --clutter:#e2896a;
+      --clutter-pale:rgba(226,137,106,.14);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px -12px rgba(0,0,0,.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#161410;
+    --paper-raised:#201d17;
+    --ink:#f1ece0;
+    --ink-soft:#aba394;
+    --ink-faint:#7c7568;
+    --line:#332d22;
+    --teal:#2dd4bf;
+    --teal-deep:#5eead4;
+    --teal-pale:rgba(45,212,191,.12);
+    --clutter:#e2896a;
+    --clutter-pale:rgba(226,137,106,.14);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 28px -12px rgba(0,0,0,.55);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Public Sans', system-ui, sans-serif;
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  h1,h2,h3{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:600;
+    line-height:1.12;
+    text-wrap:balance;
+    margin:0;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    color:var(--teal-deep);
+    font-weight:500;
+  }
+  a{color:inherit;}
+  code, .mono{font-family:'JetBrains Mono', monospace;}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:20;
+    background:color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    height:64px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; text-decoration:none;}
+  .brand img{width:30px; height:30px; border-radius:8px;}
+  .brand span{font-family:'Fraunces', serif; font-weight:600; font-size:19px;}
+  nav.toplinks{display:flex; gap:28px; font-size:14px; color:var(--ink-soft);}
+  nav.toplinks a{text-decoration:none;}
+  nav.toplinks a:hover{color:var(--ink);}
+  .version-pill{
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    background:var(--teal-pale); color:var(--teal-deep);
+    padding:3px 9px; border-radius:20px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{padding:76px 0 88px;}
+  .hero .wrap{
+    display:grid; grid-template-columns:1.05fr 1fr; gap:64px; align-items:center;
+  }
+  .hero h1{font-size:clamp(34px,4.6vw,54px); margin:14px 0 20px; letter-spacing:-.01em;}
+  .hero h1 em{font-style:italic; color:var(--teal-deep);}
+  .hero p.lede{font-size:18px; color:var(--ink-soft); max-width:46ch; margin-bottom:30px;}
+  .cta-row{display:flex; align-items:center; gap:18px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'Public Sans',sans-serif; font-weight:600; font-size:15px;
+    padding:13px 22px; border-radius:9px; text-decoration:none;
+    border:1px solid transparent; cursor:pointer;
+  }
+  .btn-primary{background:var(--teal); color:#fff;}
+  .btn-primary:hover{background:var(--teal-deep);}
+  .btn-ghost{border-color:var(--line); color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--ink-faint);}
+  .fineprint{font-size:13px; color:var(--ink-faint);}
+
+  .stat-row{display:flex; gap:34px; margin-top:40px; padding-top:28px; border-top:1px solid var(--line);}
+  .stat-row div{display:flex; flex-direction:column; gap:2px;}
+  .stat-num{font-family:'Fraunces',serif; font-weight:600; font-size:26px;}
+  .stat-label{font-size:12.5px; color:var(--ink-faint);}
+
+  /* ---------- before/after mock ---------- */
+  .demo{position:relative;}
+  .switcher{
+    display:inline-flex; background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:20px; padding:3px; margin-bottom:14px; box-shadow:var(--shadow);
+  }
+  .switcher input{position:absolute; opacity:0; pointer-events:none;}
+  .switcher label{
+    font-family:'JetBrains Mono',monospace; font-size:12px; padding:6px 16px;
+    border-radius:16px; cursor:pointer; color:var(--ink-faint); user-select:none;
+  }
+  #view-before:checked ~ .switcher label[for="view-before"],
+  #view-after:checked ~ .switcher label[for="view-after"]{
+    background:var(--teal); color:#fff;
+  }
+
+  .browser-card{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .browser-chrome{
+    display:flex; align-items:center; gap:8px; padding:10px 14px;
+    border-bottom:1px solid var(--line);
+  }
+  .dot{width:9px; height:9px; border-radius:50%; background:var(--line);}
+  .urlbar{
+    flex:1; background:var(--paper); border:1px solid var(--line); border-radius:6px;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-faint);
+    padding:5px 10px; margin-inline-start:6px;
+  }
+  .page-stage{position:relative; min-height:340px;}
+  .page-view{
+    position:absolute; inset:0; padding:18px 20px; opacity:0; transition:opacity .25s ease;
+    pointer-events:none;
+  }
+  #view-before:checked ~ .browser-card .page-before,
+  #view-after:checked ~ .browser-card .page-after{opacity:1; pointer-events:auto;}
+
+  .clut{
+    background:var(--clutter-pale); border:1px dashed var(--clutter);
+    border-radius:6px; padding:8px 10px; margin-bottom:10px; position:relative;
+  }
+  .clut::after{
+    content:attr(data-tag); position:absolute; top:-9px; inset-inline-start:8px;
+    background:var(--clutter); color:#fff; font-family:'JetBrains Mono',monospace;
+    font-size:9.5px; padding:1px 6px; border-radius:4px;
+  }
+  .clut.nav{height:22px;}
+  .clut.ad{height:46px;}
+  .clut.side{position:absolute; inset-inline-end:20px; top:100px; width:88px; height:150px;}
+  .clut.cookie{position:absolute; left:20px; right:20px; bottom:16px; height:34px;}
+  .line{height:9px; background:var(--line); border-radius:3px; margin-bottom:9px;}
+  .line.w60{width:60%;} .line.w80{width:80%;} .line.w95{width:95%;} .line.w40{width:40%;}
+
+  .after-brand{
+    display:flex; align-items:center; gap:8px; padding-bottom:10px; margin-bottom:12px;
+    border-bottom:1px solid var(--line);
+  }
+  .after-brand img{width:20px; height:20px; border-radius:5px;}
+  .after-brand .co{font-weight:700; font-size:12.5px;}
+  .after-brand .meta{font-size:10.5px; color:var(--ink-faint); font-family:'JetBrains Mono',monospace;}
+  .after-title{font-family:'Fraunces',serif; font-weight:600; font-size:19px; margin-bottom:12px;}
+
+  /* ---------- sections shared ---------- */
+  section{padding:70px 0; border-top:1px solid var(--line);}
+  .section-head{max-width:640px; margin-bottom:44px;}
+  .section-head h2{font-size:clamp(26px,3vw,36px); margin-top:10px;}
+  .section-head p{color:var(--ink-soft); margin-top:12px; font-size:16px;}
+
+  /* ---------- problem grid ---------- */
+  .problem-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .problem-item{background:var(--paper-raised); padding:24px; display:flex; flex-direction:column; gap:10px;}
+  .problem-item svg{width:26px; height:26px; stroke:var(--teal-deep);}
+  .problem-item h3{font-family:'Public Sans',sans-serif; font-weight:700; font-size:15px;}
+  .problem-item p{margin:0; font-size:13.5px; color:var(--ink-soft);}
+  .problem-item code{font-size:11px; color:var(--ink-faint); background:var(--paper); padding:2px 6px; border-radius:4px; align-self:flex-start;}
+
+  /* ---------- how it works ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3,1fr); gap:0; position:relative;}
+  .steps::before{
+    content:""; position:absolute; top:19px; left:8%; right:8%; height:1px; background:var(--line);
+  }
+  .step{padding-inline-end:24px; position:relative;}
+  .step .num{
+    width:38px; height:38px; border-radius:50%; background:var(--paper-raised);
+    border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-family:'Fraunces',serif; font-weight:600; font-size:15px; position:relative; z-index:1;
+    margin-bottom:16px;
+  }
+  .step h3{font-family:'Public Sans',sans-serif; font-weight:700; font-size:16px; margin-bottom:8px;}
+  .step p{margin:0; font-size:14px; color:var(--ink-soft);}
+  .step .kbd{
+    display:inline-block; margin-top:10px; font-family:'JetBrains Mono',monospace; font-size:11.5px;
+    background:var(--paper-raised); border:1px solid var(--line); padding:3px 8px; border-radius:5px;
+  }
+
+  /* ---------- controls (feature list) ---------- */
+  .control-list{border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--paper-raised);}
+  .control-row{
+    display:flex; align-items:center; gap:18px; padding:18px 22px;
+    border-bottom:1px solid var(--line);
+  }
+  .control-row:last-child{border-bottom:none;}
+  .control-row .txt{flex:1;}
+  .control-row h3{font-family:'Public Sans',sans-serif; font-weight:700; font-size:15px; margin-bottom:3px;}
+  .control-row p{margin:0; font-size:13.5px; color:var(--ink-soft);}
+  .toggle-visual{width:38px; height:22px; border-radius:12px; background:var(--teal); position:relative; flex:none;}
+  .toggle-visual::after{content:""; position:absolute; width:16px; height:16px; border-radius:50%; background:#fff; top:3px; inset-inline-end:3px; box-shadow:0 1px 2px rgba(0,0,0,.25);}
+  .toggle-visual.off{background:var(--line);}
+  .toggle-visual.off::after{inset-inline-end:auto; inset-inline-start:3px;}
+
+  /* ---------- privacy diagram ---------- */
+  .privacy-wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;}
+  .privacy-diagram{
+    border:1px solid var(--line); border-radius:14px; padding:26px; background:var(--paper-raised);
+    position:relative;
+  }
+  .boundary{
+    border:1.5px dashed var(--teal); border-radius:12px; padding:18px; position:relative;
+  }
+  .boundary .tag{
+    position:absolute; top:-11px; inset-inline-start:14px; background:var(--paper-raised);
+    padding:0 8px; font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--teal-deep);
+  }
+  .flow{display:flex; align-items:center; justify-content:space-between; gap:8px;}
+  .flow .node{
+    flex:1; text-align:center; font-size:12px; padding:12px 6px; background:var(--paper);
+    border-radius:8px; border:1px solid var(--line);
+  }
+  .flow .arrow{color:var(--ink-faint); font-size:16px;}
+  .outside{
+    margin-top:22px; display:flex; align-items:center; gap:10px; justify-content:center;
+    color:var(--ink-faint); font-size:12.5px;
+  }
+  .outside .server{
+    border:1px solid var(--line); border-radius:8px; padding:8px 12px; position:relative; font-family:'JetBrains Mono',monospace; font-size:11px;
+  }
+  .outside .server::before, .outside .server::after{
+    content:""; position:absolute; inset:0; margin:auto; width:130%; height:1.5px;
+    background:var(--clutter); transform:translateX(-15%) rotate(18deg);
+  }
+  .privacy-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:16px;}
+  .privacy-list li{display:flex; gap:12px; align-items:flex-start;}
+  .privacy-list svg{width:18px; height:18px; stroke:var(--teal-deep); flex:none; margin-top:3px;}
+  .privacy-list b{display:block; font-size:14.5px;}
+  .privacy-list span{font-size:13.5px; color:var(--ink-soft);}
+
+  /* ---------- install ---------- */
+  .install-panel{
+    display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line);
+    border-radius:14px; overflow:hidden; background:var(--paper-raised);
+  }
+  .install-steps{padding:34px 36px;}
+  .install-steps ol{margin:0; padding-inline-start:20px; display:flex; flex-direction:column; gap:14px; font-size:14.5px;}
+  .install-steps li b{display:block; font-size:14.5px;}
+  .install-steps li span{color:var(--ink-soft); font-size:13.5px;}
+  .terminal{
+    background:#1a1917; color:#e9e4d8; padding:34px 30px; font-family:'JetBrains Mono',monospace;
+    font-size:13px; line-height:2;
+  }
+  .terminal .p{color:#7c7568;}
+  .terminal .c{color:#5eead4;}
+
+  /* ---------- footer ---------- */
+  footer{padding:40px 0 60px; border-top:1px solid var(--line);}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;}
+  footer .fbrand{display:flex; align-items:center; gap:8px; font-family:'Fraunces',serif; font-weight:600;}
+  footer .fbrand img{width:20px; height:20px; border-radius:6px;}
+  footer .flinks{display:flex; gap:22px; font-size:13px; color:var(--ink-soft);}
+  footer .flinks a{text-decoration:none;}
+  footer .flinks a:hover{color:var(--ink);}
+  footer .fnote{font-size:12px; color:var(--ink-faint); margin-top:18px;}
+
+  @media (max-width:860px){
+    .hero .wrap{grid-template-columns:1fr;}
+    .problem-grid{grid-template-columns:1fr 1fr;}
+    .steps{grid-template-columns:1fr; gap:26px;}
+    .steps::before{display:none;}
+    .privacy-wrap{grid-template-columns:1fr;}
+    .install-panel{grid-template-columns:1fr;}
+    nav.toplinks{display:none;}
+    .stat-row{flex-wrap:wrap; row-gap:16px;}
+  }
+  @media (max-width:600px){
+    .problem-grid{grid-template-columns:1fr;}
+  }
+
+  /* ---------- RTL ---------- */
+  [dir="rtl"] .terminal{direction:ltr; text-align:left;}
+  [dir="rtl"] .install-steps ol{padding-inline-start:20px;}
+  .lang-btn{
+    font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500;
+    background:var(--paper-raised); color:var(--ink-soft); border:1px solid var(--line);
+    border-radius:20px; padding:5px 12px; cursor:pointer;
+  }
+  .lang-btn:hover{color:var(--ink); border-color:var(--ink-faint);}
+</style>
+
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img src="data:image/png;base64,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" alt="" />
+      <span>Purely</span>
+    </a>
+    <nav class="toplinks">
+      <a href="#problem" id="nav-problem">The problem</a>
+      <a href="#how" id="nav-how">How it works</a>
+      <a href="#features" id="nav-features">Features</a>
+      <a href="#privacy" id="nav-privacy">Privacy</a>
+      <a href="#install" id="nav-install">Install</a>
+    </nav>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <span class="version-pill">v1.5.0</span>
+      <button type="button" class="lang-btn" id="lang-toggle" aria-label="Switch language / החלף שפה">EN / עברית</button>
+    </div>
+  </div>
+</div>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow" id="hero-eyebrow">A Chrome extension for print &amp; PDF</span>
+      <h1 id="hero-h1">Ads don&rsquo;t belong<br>on <em>paper.</em></h1>
+      <p class="lede" id="hero-lede">Purely strips ads, navigation, pop-ups and clutter from any web page in one click, then hands you a clean, branded PDF - entirely inside your browser. Nothing you print is ever sent anywhere.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#install" id="hero-cta-install">Install for free</a>
+        <a class="btn btn-ghost" href="#how" id="hero-cta-how">See how it works</a>
+      </div>
+      <p class="fineprint" style="margin-top:14px;" id="hero-fineprint">No account. No tracking. No external servers - ever.</p>
+      <div class="stat-row">
+        <div><span class="stat-num">11</span><span class="stat-label" id="stat-1">clutter categories</span></div>
+        <div><span class="stat-num">0</span><span class="stat-label" id="stat-2">external servers</span></div>
+        <div><span class="stat-num">2</span><span class="stat-label" id="stat-3">languages, EN/HE</span></div>
+      </div>
+    </div>
+
+    <div class="demo">
+      <input type="radio" name="view" id="view-before" style="display:none">
+      <input type="radio" name="view" id="view-after" style="display:none" checked>
+      <div class="switcher">
+        <label for="view-before">before.html</label>
+        <label for="view-after">after.pdf</label>
+      </div>
+      <div class="browser-card">
+        <div class="browser-chrome">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="urlbar">example-news-site.com/article</span>
+        </div>
+        <div class="page-stage">
+          <div class="page-view page-before">
+            <div class="clut nav" data-tag="nav"></div>
+            <div class="clut ad" data-tag=".ad-banner"></div>
+            <div class="line w60" style="height:16px;width:70%;margin-top:14px;"></div>
+            <div class="line w95"></div><div class="line w80"></div><div class="line w60"></div>
+            <div class="clut side" data-tag="#sidebar"></div>
+            <div class="line w95" style="margin-top:10px;"></div><div class="line w40"></div>
+            <div class="clut cookie" data-tag="#cookie"></div>
+          </div>
+          <div class="page-view page-after">
+            <div class="after-brand">
+              <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0eNT6AAA3MklEQVR4nO2dvZIk2X1fqzvWUmhG9jgg+ArkUnoDmXK0LyBZEmkqEIFdLGVgv6CAg1UECU96AcmRqTdQCKFHkAg6488o6CajerZmKrvz6/7+H/fevOc4HC6ysnJOZ9b5126a6ocLNMmrH7+bLpN1L+YduO7GvNOQ4xCeKO04dg6g+nHc8fFYKh/U7tMnHZ/0NAHHNrWxo/e//ObB60jAD34oNQO/BfF39nEU4q8rI/66hvPG/8jD33/JgFADBoAWYv8c4u/sw0l89Ttu7vz31Bg28IH4u2lnKIiHAaCF4N9D/J19OIkn/htOuPPXNYx9518CA4E/DAC1g38P8Xf24SSe+G84If66BuKvM13ef/kt/TKCwNrRv0H8nX04iSf+G06Iv66B+Ou8dMcwoMEAUDP6N4i/sw8n8cR/wwnx1zUQf519dwwDx2EAqBX9G8Tf2YeTeOK/4YT46xqIv85UvNn7r3ibYAsGgBVe/fj9FP5CR/ydfTiJJ/4bToi/roH4Z8b/HgaBZRgAXkT/BvHX4Ut+zO6qDyF3EP8VH5JEP076aX/5CQ5uxjDwCQaAF+G/Qvx1iL/ZHfEXTiv+nb/pnBsk/ve85+2BsQeAl+G/Qvx1iL/ZHfEXTivibzrnBoz/Pe8HHgSG/Isvh/8K8dch/mZ3xF84rYi/6ZwbPP6jDwJD/YXXw3+F+OsQf7M74i+cVsTfdM6pnDD+ow4CQ/xFt8N/hfjrEH+zO+IvnFbE33TOqZw8/qMNAo+Xk0P8Iy8Y4m92R/yF04r4m845lYHif+XV91+3dHWG8DBu+K9w569D/M3uWnp54Z/6rfiQJPrBP/ULV7zPdHn/1XenbOXDmOG/Qvx1iL/ZHfEXTivu/E3nnMpgd/5bT3q2QeBUbwEQ/2ew7J/gowTiv6fGsIEP3Pkna+8n/ldeffer6q8inpximnn1n7+fjp8g3PnrcOdvdtfSywfL/is+JIl+sOwfrlj6IUzz//f9r/pfDeh+BYD4L8Cdf4KPEoj/nhrDBj4Q/2Ttfd35Xxb+0xlWA7oeAIj/AsQ/wUcJxH9PjWEDH4h/svb+43+WIeCh2/BfYdl/DvFP8FEC8d9TY9jAB+KfrP088X9Oj28JdLcCQPxXIP4JPkog/ntqDBv4QPyTtZ83/r2uBnQ1ABD/FYh/go8SiP+eGsMGPhD/ZO3njn+vQ8BDV+G/wrL/HOKf4KME4r+nxrCBD8Q/WfsY8e/xLYHmVwCI/wbEP8FHCcR/T41hAx+If7L2MePfy2pA0wMA8d+A+Cf4KIH476kxbOAD8U/WPm78exkCmh0AiP8GxD/BRwnEf0+NYQMfiH+yduLfwxDQ5ABA/Dcg/gk+SiD+e2oMG/hA/JO1E/9ehoDmBgDivwHxT/BRAvHfU2PYwAfin6yd+Pc0BDQ1ABD/DYh/go8SiP+eGsMGPhD/ZO3Ev7choJkBgPhvQPwTfJRA/PfUGDbwgfgnayf+PQ4BTQwAxH8D4p/gowTiv6fGsIEPxD9ZO/HvdQioPgAQ/w2If4KPEoj/nhrDBj4Q/2TtxF/h+g1Br7/9ahp6ACD+GxD/BB8lEP89NYYNfCD+ydqJv8LT1wNOH9zVHgKqDQDEfwPin+CjBOK/p8awgQ/EP1k78bfG/0bNIaDKAED8NyD+CT5KIP57agwb+ED8k7UTf6/41x4C0gcA4r8B8U/wUQLx31Nj2MAH4p+snfh7x7/mEJA6ABD/DYh/go8SiP+eGsMGPhD/ZO3EPyr+tYaAtAGA+G9A/BN8lED899QYNvCB+CdrJ/7R8a8xBKQMAMR/A+Kf4KME4r+nxrCBD8Q/WTvxz4p/9hCQ+xmAw3+l4L+7efdOx0f8E3yUQPz31Bg28IH4J2sn/tnxz+Qx7e6f+M8h/gk+SiD+e2oMG/hA/JO1E/+a8c9YBQgdAIj/CsQ/wUcJxH9PjWEDH4h/snbi38Kdf/QQEDYAEP8ViH+CjxKI/54awwY+EP9k7cS/pWX/yCEg9i0Alv1FHyGSg49DeCLiv+GkshziX+jDTWzow92eoMrpOTX4GtLXe/4pA8DT3T/xn0P8E3yUwJ3/nhrDBj5w55+snfi3Gv+oVQD3AYD4L0D8E3yUQPz31Bg28IH4J2sn/q3f+UcMAa4DAPFfgPgn+CiB+O+pMWzgA/FP1k78e1n29x4CfFcAWPYXfYRIDj4O4YmI/4YT3vPXNQS44z3/cMXSD6H6a0jf7/mHDQCvfvzp3/vvwpf86BB/s7uWrlniv+JDkugH8Q9XLP0QGrl2HyrH33MVwGUAIP7P4M4/wUcJxH9PjWEDH4h/svY27tcOP2n115A24u89BCR+FTB3/qnuWPafi6h/zX6CO/8VH5JEP7jzD1cs/RAauXYfGon/E06H8Zhz90/8dYi/2V0j1+wTxH/FhyTRD+Ifrlj6ITRy7T40GP/X39hXARJWAIh/qjvu/OciGrlmnyD+Kz4kiX4Q/3DF0g+hkWv3ocH4e/EYe/dP/HWIv9ldI9fsE8R/xYck0Q/iH65Y+iE0cu0+NB7/1998OVUZAIj/T/CBvznVrxXiv6fGsIEPxD9ZOx/4O2P8Lz/9R8sQEPQWAHf+qe5Y9p+LaOSafYI7/xUfkkQ/uPMPVyz9EBq5dh86ib+VR/+7f+KvQ/zN7hq5Zp8g/is+JIl+EP9wxdIPoZFr96HD+KurAM4rAMQ/1R13/nMRjVyzTxD/FR+SRD+If7hi6YfQyLX70GH8LTz63f0Tfx3ib3bXyDX7BPFf8SFJ9IP4hyuWfgiNXLsPncdfWQVwWgEg/qnuuPOfi2jkmn2C+K/4kCT6QfzDFUs/hEau3YfO46/yaL/7J/46xN/srpFr9gniv+JDkugH8Q9XLP0QGrl2zxT/0lUA4woA8U91x53/XEQj1+wTxH/FhyTRD+Ifrlj6ITRy7T6cKP4Kj/rdP/HXIf5md41cs08Q/xUfkkQ/iH+4YumH0Mi1+3DS+JesAogrAMRfh/ib3TVyzT5B/Fd8SBL9IP7hiqUfQiPX7lnjX8pj+d0/8dch/mZ3jVyzTxD/FR+SRD+If7hi6YfQyLU7QvxfH1wFKFwBIP46xN/srpFr9gniv+JDkugH8Q9XLP0QGrl2R4h/CQUDAPHXIf5md41cs08Q/xUfkkQ/iH+4YumH0Mi1S/yFAeDD8j/x1yH+ZneNvIA8QfxXfEgS/SD+4YqlH0Ij1+6I8X994G2AAysAxF+H+JvdNXLNPkH8V3xIEv0g/uGKpR9CI9fuiPE/yuYA8OrH72KPzLx3p8ML+VsSf7O7Rq7ZJ4j/ig9Joh/EP1yx9ENo5NodPf6vd1YBgn4d8AGIv7MPJ/HVrxXiv6fGsIEPxD9Z+8EnIP4zRo//EeoMAMTf2YeT+OrnI/HfU2PYwAfin6yd+CsQf+MAELb8T/ydfTiJJ/4bTirLIf6FPtzEhj7c7Qm4859B/I+/DZC7AkD8nX04iSf+G06Iv66B9/x1iL8C8S87lfIGAOLv7MNJPPHfcEL8dQ3EX4f4KxD/8lPpMWX5n/g7+3AST/w3nBB/XQPx1yH+CsR/+1R6/evltwHiVwCIv7MPJ/HEf8MJ8dc1EH8d4q9A/PVTKXYAIP7OPpzEE/8NJ8Rf10D8dYi/AvG3XYaPYcv/xN/Zh5N44r/hhPjrGoi/DvFXIP5lp9LS2wAxKwDE39mHk3jiv+GE+OsaiL8O8Vcg/j6Xof8AQPydfTiJJ/4bToi/roH46xB/BeLvdxn6DgDE39mHk3jiv+GE+OsaiL8O8Vcg/pbLcNoeAEzv/xN/Zx9O4on/hhPir2sg/jrEX4H42+P/+te/nPxXAIi/sw8n8cR/wwnx1zUQfx3ir0D8fe/8/QYA4u/sw0k88d9wQvx1DcRfh/grEP+Y+NsHAOLv7MNJPPHfcEL8dQ3EX4f4KxD/mPjPBoDi9/+Jv7MPJ/HEf8MJ8dc1EH8d4q9A/GPif/85AG0FgPg7+3AST/w3nBB/XQPx1yH+CsQ/9s5fHwCIv7MPJ/HEf8MJ8dc1EH8d4q9A/HPiXz4AEH9nH07iif+GE+Kvaxgv/sS+DgwArQ8IxH8O8Z+LqD6E3EH8V3xIEk8V/3c/8O/wLw3yj0zq1Kez6ceEAAAAAElFTkSuQmCC" alt="" />
+              <div>
+                <div class="co">Your Company</div>
+                <div class="meta">example-news-site.com · Mar 4, 2026</div>
+              </div>
+            </div>
+            <div class="after-title">The headline, and only the headline</div>
+            <div class="line w95"></div><div class="line w95"></div><div class="line w80"></div>
+            <div class="line w95" style="margin-top:10px;"></div><div class="line w60"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="problem">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" id="problem-eyebrow">The problem</span>
+      <h2 id="problem-h2">Chrome prints exactly what you see - clutter included.</h2>
+      <p id="problem-p">Purely recognizes the same patterns designers and developers actually use to build these elements, and removes them before you print. Toggle off anything you'd rather keep.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="3" y="4" width="18" height="6" rx="1"/><path d="M3 14h18M3 18h10"/></svg>
+        <h3 id="p1-h">Ads</h3>
+        <p id="p1-p">Banner, sidebar and native ad units - the single biggest source of wasted print space.</p>
+        <code>.adsbygoogle</code>
+      </div>
+      <div class="problem-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <h3 id="p2-h">Navigation &amp; menus</h3>
+        <p id="p2-p">Header bars, breadcrumbs and menus that repeat on every single page.</p>
+        <code>nav, .navbar</code>
+      </div>
+      <div class="problem-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+        <h3 id="p3-h">Pop-ups &amp; modals</h3>
+        <p id="p3-p">Newsletter signups, "before you go" dialogs, and paywalled overlays.</p>
+        <code>[role="dialog"]</code>
+      </div>
+      <div class="problem-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M4 17h16M4 17c0-4 3-4 3-8s3-4 5-4 5 0 5 4-3 4-3 8"/></svg>
+        <h3 id="p4-h">Cookie banners</h3>
+        <p id="p4-p">Consent strips that dock permanently at the top or bottom of the page.</p>
+        <code>#onetrust-banner-sdk</code>
+      </div>
+      <div class="problem-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M9 10h.01M15 10h.01M9 15c1 1 5 1 6 0"/></svg>
+        <h3 id="p5-h">Comments &amp; related posts</h3>
+        <p id="p5-p">Reader discussions and "you may also like" rails at the bottom of articles.</p>
+        <code>#disqus_thread</code>
+      </div>
+      <div class="problem-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 3v14M6 9l6-6 6 6M4 21h16"/></svg>
+        <h3 id="p6-h">Social &amp; sticky bars</h3>
+        <p id="p6-p">Share buttons and floating bars that follow you down the page.</p>
+        <code>.share-buttons</code>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" id="how-eyebrow">How it works</span>
+      <h2 id="how-h2">Three steps, no dialogs to fight with.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h3 id="s1-h">Click, or press a shortcut</h3>
+        <p id="s1-p">Open the Purely popup and turn on "Clean this page" - or skip the click entirely.</p>
+        <span class="kbd">Ctrl+Shift+K</span>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h3 id="s2-h">Pick a mode</h3>
+        <p id="s2-p">"Declutter only" keeps the original layout. "Reader mode" rebuilds a clean article view using a local content-scoring engine - no AI, no cloud, nothing leaves your browser.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h3 id="s3-h">Export a branded PDF</h3>
+        <p id="s3-p">Chrome's own print dialog opens, with your logo and header already in place. Choose "Save as PDF" and you're done.</p>
+        <span class="kbd">Ctrl+Shift+P</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" id="features-eyebrow">Under the hood</span>
+      <h2 id="features-h2">Every setting is a switch you control.</h2>
+      <p id="features-p">Nothing is hidden or automatic by default beyond what you choose - Purely's own settings page looks a lot like this list.</p>
+    </div>
+    <div class="control-list">
+      <div class="control-row">
+        <div class="txt"><h3 id="f1-h">11 cleaning categories</h3><p id="f1-p">Ads, navigation, pop-ups, cookie banners, social, comments, related posts, sticky elements, footer, background media - each on its own switch.</p></div>
+        <div class="toggle-visual"></div>
+      </div>
+      <div class="control-row">
+        <div class="txt"><h3 id="f2-h">Smart Reader mode</h3><p id="f2-p">A local scoring engine rebuilds a clean reading view - title, byline and date included when the page exposes them.</p></div>
+        <div class="toggle-visual"></div>
+      </div>
+      <div class="control-row">
+        <div class="txt"><h3 id="f3-h">Custom CSS selectors</h3><p id="f3-p">"Always remove" and "always keep" rules for the one stubborn site the defaults don't fully cover.</p></div>
+        <div class="toggle-visual"></div>
+      </div>
+      <div class="control-row">
+        <div class="txt"><h3 id="f4-h">Auto-clean by domain</h3><p id="f4-p">Pick sites that get cleaned automatically on every visit - opt-in, one permission click.</p></div>
+        <div class="toggle-visual off"></div>
+      </div>
+      <div class="control-row">
+        <div class="txt"><h3 id="f5-h">PDF branding</h3><p id="f5-p">Your logo, header and footer text - visible only in the printed/PDF version, never while browsing.</p></div>
+        <div class="toggle-visual"></div>
+      </div>
+      <div class="control-row">
+        <div class="txt"><h3 id="f6-h">English &amp; Hebrew, full RTL</h3><p id="f6-p">Every page, menu and notification translates instantly - the whole interface flips direction with it.</p></div>
+        <div class="toggle-visual"></div>
+      </div>
+      <div class="control-row">
+        <div class="txt"><h3 id="f7-h">Pick element to remove</h3><p id="f7-p">Click the popup button, then click anything automatic detection missed to hide it instantly - remembered per site so it's re-applied automatically next time.</p></div>
+        <div class="toggle-visual"></div>
+      </div>
+      <div class="control-row">
+        <div class="txt"><h3 id="f8-h">Reader-mode typography controls</h3><p id="f8-p">Adjust text size and line spacing live in Reader mode, remembered for next time.</p></div>
+        <div class="toggle-visual"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="privacy">
+  <div class="wrap">
+    <div class="privacy-wrap">
+      <div>
+        <span class="eyebrow" id="privacy-eyebrow">Privacy by construction</span>
+        <h2 style="margin:10px 0 18px; font-size:clamp(24px,3vw,32px);" id="privacy-h2">There is no server to trust, because there is no server.</h2>
+        <ul class="privacy-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg><div><b id="pv1-b">Zero network calls</b><span id="pv1-s">Cleaning, reading, and branding all run on-device. Purely has no backend to connect to.</span></div></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg><div><b id="pv2-b">Your logo stays on your machine</b><span id="pv2-s">Uploaded as local storage only, never uploaded anywhere - not even to sync.</span></div></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg><div><b id="pv3-b">Minimal permissions, opt-in for the rest</b><span id="pv3-s">Broad site access is only requested if you turn on auto-clean for a specific domain.</span></div></li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M20 6L9 17l-5-5"/></svg><div><b id="pv4-b">Reversible by design</b><span id="pv4-s">Cleaning hides elements, it never deletes them - restore the original page in one click.</span></div></li>
+        </ul>
+        <p class="fineprint" style="margin-top:18px;"><a href="../PRIVACY.md" id="privacy-full-link">Read the full privacy policy →</a></p>
+      </div>
+      <div class="privacy-diagram">
+        <div class="boundary">
+          <span class="tag" id="pv-tag">stays in your browser</span>
+          <div class="flow">
+            <div class="node" id="pv-node1">Page</div>
+            <span class="arrow">→</span>
+            <div class="node" id="pv-node2">Purely engine</div>
+            <span class="arrow">→</span>
+            <div class="node" id="pv-node3">Print dialog</div>
+          </div>
+        </div>
+        <div class="outside">
+          <div class="server" id="pv-server">external server</div>
+          <span id="pv-never">never contacted</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="install">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" id="install-eyebrow">Getting started</span>
+      <h2 id="install-h2">Installed in under a minute.</h2>
+      <p id="install-p">Chrome extensions install through the browser's own Developer mode - there's no separate installer to download or trust.</p>
+    </div>
+    <div class="install-panel">
+      <div class="install-steps">
+        <ol>
+          <li><b id="i1-b">Unzip the download</b><span id="i1-s">Extract <code class="mono">Purely-v1.5.0.zip</code> to any folder.</span></li>
+          <li><b id="i2-b">Open chrome://extensions</b><span id="i2-s">Type it straight into the address bar.</span></li>
+          <li><b id="i3-b">Turn on Developer mode</b><span id="i3-s">Top-right toggle on the extensions page.</span></li>
+          <li><b id="i4-b">Click "Load unpacked"</b><span id="i4-s">Select the unzipped folder (it contains <code class="mono">manifest.json</code>).</span></li>
+        </ol>
+        <a class="btn btn-primary" style="margin-top:26px;" href="#top" id="install-back">Back to top</a>
+      </div>
+      <div class="terminal">
+        <div><span class="p">$</span> unzip <span class="c">Purely-v1.5.0.zip</span></div>
+        <div><span class="p">$</span> open <span class="c">chrome://extensions</span></div>
+        <div><span class="p">$</span> toggle <span class="c">"Developer mode"</span></div>
+        <div><span class="p">$</span> click <span class="c">"Load unpacked"</span></div>
+        <div style="margin-top:10px;color:#7c7568;" id="install-done">✓ Purely is ready. No restart needed.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="fbrand">
+        <img src="data:image/png;base64,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" alt="" />
+        Purely
+      </div>
+      <p class="fnote" id="footer-note">Clean pages for print &amp; PDF. Built entirely inside the browser.</p>
+      <p class="fnote" id="footer-copyright">© 2026 Ofir Shudari. All rights reserved.</p>
+    </div>
+    <div class="flinks">
+      <a href="#problem" id="f-nav-problem">The problem</a>
+      <a href="#features" id="f-nav-features">Features</a>
+      <a href="#privacy" id="f-nav-privacy">Privacy</a>
+      <a href="../PRIVACY.md" id="f-nav-privacy-policy">Privacy Policy</a>
+      <a href="#install" id="f-nav-install">Install</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var dict = {
+    'nav-problem': ['The problem', 'הבעיה'],
+    'nav-how': ['How it works', 'איך זה עובד'],
+    'nav-features': ['Features', 'יכולות'],
+    'nav-privacy': ['Privacy', 'פרטיות'],
+    'nav-install': ['Install', 'התקנה'],
+    'hero-eyebrow': ['A Chrome extension for print & PDF', 'תוסף Chrome להדפסה ו-PDF'],
+    'hero-lede': [
+      'Purely strips ads, navigation, pop-ups and clutter from any web page in one click, then hands you a clean, branded PDF - entirely inside your browser. Nothing you print is ever sent anywhere.',
+      'Purely מנקה פרסומות, ניווט, פופ-אפים ובלגן מכל עמוד בקליק אחד, ומכין לך PDF נקי וממותג - הכל בתוך הדפדפן שלך. שום דבר שאתה מדפיס לא נשלח לשום מקום.'
+    ],
+    'hero-cta-install': ['Install for free', 'התקן בחינם'],
+    'hero-cta-how': ['See how it works', 'ראה איך זה עובד'],
+    'hero-fineprint': ['No account. No tracking. No external servers - ever.', 'בלי חשבון. בלי מעקב. בלי שרתים חיצוניים - אף פעם.'],
+    'stat-1': ['clutter categories', 'קטגוריות ניקוי'],
+    'stat-2': ['external servers', 'שרתים חיצוניים'],
+    'stat-3': ['languages, EN/HE', 'שפות, עברית/אנגלית'],
+    'problem-eyebrow': ['The problem', 'הבעיה'],
+    'problem-h2': ['Chrome prints exactly what you see - clutter included.', 'Chrome מדפיס בדיוק את מה שאתה רואה - כולל הבלגן.'],
+    'problem-p': [
+      "Purely recognizes the same patterns designers and developers actually use to build these elements, and removes them before you print. Toggle off anything you'd rather keep.",
+      'Purely מזהה את אותם דפוסים שמעצבים ומפתחים משתמשים בהם בפועל, ומסיר אותם לפני ההדפסה. אפשר לכבות כל קטגוריה שרוצים לשמור.'
+    ],
+    'p1-h': ['Ads', 'פרסומות'],
+    'p1-p': ['Banner, sidebar and native ad units - the single biggest source of wasted print space.', 'באנרים, פרסומות בסיידבר ופרסומות טבעיות - המקור הגדול ביותר לבזבוז מקום בהדפסה.'],
+    'p2-h': ['Navigation & menus', 'ניווט ותפריטים'],
+    'p2-p': ['Header bars, breadcrumbs and menus that repeat on every single page.', 'סרגלי ניווט, breadcrumbs ותפריטים שחוזרים בכל עמוד.'],
+    'p3-h': ['Pop-ups & modals', 'פופ-אפים וחלונות'],
+    'p3-p': ['Newsletter signups, "before you go" dialogs, and paywalled overlays.', 'הרשמות לניוזלטר, חלונות "לפני שתלך", ומודעות תשלום.'],
+    'p4-h': ['Cookie banners', 'באנרי עוגיות'],
+    'p4-p': ['Consent strips that dock permanently at the top or bottom of the page.', 'פסי הסכמה שנתקעים בקבוע בראש או בתחתית העמוד.'],
+    'p5-h': ['Comments & related posts', 'תגובות ופוסטים קשורים'],
+    'p5-p': ['Reader discussions and "you may also like" rails at the bottom of articles.', 'דיוני קוראים ורצועות "אולי יעניין אותך" בתחתית מאמרים.'],
+    'p6-h': ['Social & sticky bars', 'רשתות חברתיות וסרגלים דביקים'],
+    'p6-p': ['Share buttons and floating bars that follow you down the page.', 'כפתורי שיתוף וסרגלים צפים שעוקבים אחריך במורד העמוד.'],
+    'how-eyebrow': ['How it works', 'איך זה עובד'],
+    'how-h2': ['Three steps, no dialogs to fight with.', 'שלושה שלבים, בלי חלונות מעצבנים.'],
+    's1-h': ['Click, or press a shortcut', 'לחץ, או השתמש בקיצור מקלדת'],
+    's1-p': ['Open the Purely popup and turn on "Clean this page" - or skip the click entirely.', 'פתח את חלונית Purely והפעל "נקה עמוד זה" - או דלג על הלחיצה לגמרי.'],
+    's2-h': ['Pick a mode', 'בחר מצב'],
+    's2-p': [
+      '"Declutter only" keeps the original layout. "Reader mode" rebuilds a clean article view using a local content-scoring engine - no AI, no cloud, nothing leaves your browser.',
+      '"ניקוי בלבד" שומר על המבנה המקורי. "מצב קריאה" בונה מחדש תצוגת מאמר נקייה באמצעות מנוע ניקוד מקומי - בלי AI, בלי ענן, שום דבר לא עוזב את הדפדפן.'
+    ],
+    's3-h': ['Export a branded PDF', 'ייצא PDF ממותג'],
+    's3-p': ["Chrome's own print dialog opens, with your logo and header already in place. Choose \"Save as PDF\" and you're done.", 'חלון ההדפסה של Chrome נפתח, עם הלוגו והכותרת שלך כבר במקום. בחר "שמור כ-PDF" וסיימת.'],
+    'features-eyebrow': ['Under the hood', 'מתחת למכסה המנוע'],
+    'features-h2': ['Every setting is a switch you control.', 'כל הגדרה היא מתג שאתה שולט בו.'],
+    'features-p': ["Nothing is hidden or automatic by default beyond what you choose - Purely's own settings page looks a lot like this list.", 'שום דבר לא מוסתר או אוטומטי כברירת מחדל מעבר למה שאתה בוחר - עמוד ההגדרות של Purely נראה בדיוק כמו הרשימה הזו.'],
+    'f1-h': ['11 cleaning categories', '11 קטגוריות ניקוי'],
+    'f1-p': ['Ads, navigation, pop-ups, cookie banners, social, comments, related posts, sticky elements, footer, background media - each on its own switch.', 'פרסומות, ניווט, פופ-אפים, באנרי עוגיות, רשתות חברתיות, תגובות, פוסטים קשורים, אלמנטים דביקים, פוטר, מדיה ברקע - כל אחת עם מתג משלה.'],
+    'f2-h': ['Smart Reader mode', 'מצב קריאה חכם'],
+    'f2-p': ['A local scoring engine rebuilds a clean reading view - title, byline and date included when the page exposes them.', 'מנוע ניקוד מקומי בונה מחדש תצוגת קריאה נקייה - כולל כותרת, כותב ותאריך כשהעמוד חושף אותם.'],
+    'f3-h': ['Custom CSS selectors', 'סלקטורי CSS מותאמים אישית'],
+    'f3-p': ['"Always remove" and "always keep" rules for the one stubborn site the defaults don\'t fully cover.', 'כללי "תמיד הסר" ו"תמיד השאר" לאתר העקשן שברירות המחדל לא מכסות במלואן.'],
+    'f4-h': ['Auto-clean by domain', 'ניקוי אוטומטי לפי דומיין'],
+    'f4-p': ['Pick sites that get cleaned automatically on every visit - opt-in, one permission click.', 'בחר אתרים שינוקו אוטומטית בכל ביקור - אופציונלי, בלחיצת הרשאה אחת.'],
+    'f5-h': ['PDF branding', 'מיתוג PDF'],
+    'f5-p': ['Your logo, header and footer text - visible only in the printed/PDF version, never while browsing.', 'הלוגו, הכותרת העליונה והתחתונה שלך - מוצגים רק בגרסה המודפסת/PDF, לעולם לא בגלישה רגילה.'],
+    'f6-h': ['English & Hebrew, full RTL', 'אנגלית ועברית, RTL מלא'],
+    'f6-p': ['Every page, menu and notification translates instantly - the whole interface flips direction with it.', 'כל עמוד, תפריט והתראה מתורגמים מיידית - כל הממשק מתהפך כיוון יחד איתם.'],
+    'f7-h': ['Pick element to remove', 'בחירת רכיב להסרה'],
+    'f7-p': ["Click the popup button, then click anything automatic detection missed to hide it instantly - remembered per site so it's re-applied automatically next time.", 'לוחצים על הכפתור בפופאפ, ואז לוחצים על כל רכיב שהזיהוי האוטומטי פספס כדי להסתיר אותו מיידית - נשמר לפי אתר ומופעל מחדש אוטומטית בפעם הבאה.'],
+    'f8-h': ['Reader-mode typography controls', 'בקרות טיפוגרפיה במצב קריאה'],
+    'f8-p': ['Adjust text size and line spacing live in Reader mode, remembered for next time.', 'שינוי גודל טקסט ומרווח שורות בזמן אמת במצב קריאה, נשמר לפעם הבאה.'],
+    'privacy-eyebrow': ['Privacy by construction', 'פרטיות מובנית'],
+    'privacy-h2': ['There is no server to trust, because there is no server.', 'אין שרת שצריך לסמוך עליו, כי אין שרת.'],
+    'pv1-b': ['Zero network calls', 'אפס קריאות רשת'],
+    'pv1-s': ['Cleaning, reading, and branding all run on-device. Purely has no backend to connect to.', 'הניקוי, הקריאה והמיתוג רצים כולם במכשיר. ל-Purely אין שום שרת backend להתחבר אליו.'],
+    'pv2-b': ['Your logo stays on your machine', 'הלוגו שלך נשאר על המחשב שלך'],
+    'pv2-s': ['Uploaded as local storage only, never uploaded anywhere - not even to sync.', 'נשמר רק באחסון מקומי, ולעולם לא מועלה לשום מקום - אפילו לא לסנכרון.'],
+    'pv3-b': ['Minimal permissions, opt-in for the rest', 'הרשאות מינימליות, השאר אופציונלי'],
+    'pv3-s': ['Broad site access is only requested if you turn on auto-clean for a specific domain.', 'גישה רחבה לאתרים מתבקשת רק אם אתה מפעיל ניקוי אוטומטי לדומיין ספציפי.'],
+    'pv4-b': ['Reversible by design', 'הפיך מטבעו'],
+    'pv4-s': ['Cleaning hides elements, it never deletes them - restore the original page in one click.', 'הניקוי מסתיר אלמנטים, לעולם לא מוחק אותם - שחזר את העמוד המקורי בלחיצה אחת.'],
+    'privacy-full-link': ['Read the full privacy policy →', 'קרא את מדיניות הפרטיות המלאה ←'],
+    'pv-tag': ['stays in your browser', 'נשאר בדפדפן שלך'],
+    'pv-node1': ['Page', 'עמוד'],
+    'pv-node2': ['Purely engine', 'מנוע Purely'],
+    'pv-node3': ['Print dialog', 'חלון הדפסה'],
+    'pv-server': ['external server', 'שרת חיצוני'],
+    'pv-never': ['never contacted', 'לעולם לא נוצר קשר'],
+    'install-eyebrow': ['Getting started', 'איך מתחילים'],
+    'install-h2': ['Installed in under a minute.', 'מותקן תוך פחות מדקה.'],
+    'install-p': ["Chrome extensions install through the browser's own Developer mode - there's no separate installer to download or trust.", 'תוספי Chrome מותקנים דרך מצב המפתחים של הדפדפן עצמו - אין מתקין נפרד להוריד או לסמוך עליו.'],
+    'i1-b': ['Unzip the download', 'חלץ את הקובץ שהורדת'],
+    'i1-s': ['Extract Purely-v1.5.0.zip to any folder.', 'חלץ את Purely-v1.5.0.zip לתיקייה כלשהי.'],
+    'i2-b': ['Open chrome://extensions', 'פתח chrome://extensions'],
+    'i2-s': ['Type it straight into the address bar.', 'הקלד ישירות בשורת הכתובת.'],
+    'i3-b': ['Turn on Developer mode', 'הפעל מצב מפתחים'],
+    'i3-s': ['Top-right toggle on the extensions page.', 'המתג בפינה הימנית-עליונה בעמוד התוספים.'],
+    'i4-b': ['Click "Load unpacked"', 'לחץ על "טען פריט בלתי ארוז"'],
+    'i4-s': ['Select the unzipped folder (it contains manifest.json).', 'בחר את התיקייה המחולצת (מכילה manifest.json).'],
+    'install-back': ['Back to top', 'חזרה למעלה'],
+    'install-done': ['✓ Purely is ready. No restart needed.', '✓ Purely מוכן. לא נדרשת הפעלה מחדש.'],
+    'footer-note': ['Clean pages for print & PDF. Built entirely inside the browser.', 'עמודים נקיים להדפסה ו-PDF. בנוי כולו בתוך הדפדפן.'],
+    'footer-copyright': ['© 2026 Ofir Shudari. All rights reserved.', '© 2026 אופיר שודרי. כל הזכויות שמורות.'],
+    'f-nav-problem': ['The problem', 'הבעיה'],
+    'f-nav-features': ['Features', 'יכולות'],
+    'f-nav-privacy': ['Privacy', 'פרטיות'],
+    'f-nav-privacy-policy': ['Privacy Policy', 'מדיניות פרטיות'],
+    'f-nav-install': ['Install', 'התקנה']
+  };
+  // i18-html keys allow static <em>/<br> markup - only ever set from this hardcoded dictionary, never user input
+  var htmlKeys = { 'hero-h1': ['Ads don’t belong<br>on <em>paper.</em>', 'פרסומות לא שייכות<br>ל<em>נייר.</em>'] };
+
+  function apply(lang){
+    var idx = lang === 'he' ? 1 : 0;
+    Object.keys(dict).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.textContent = dict[id][idx];
+    });
+    Object.keys(htmlKeys).forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.innerHTML = htmlKeys[id][idx];
+    });
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+    document.body.dir = lang === 'he' ? 'rtl' : 'ltr';
+    try { localStorage.setItem('purely-site-lang', lang); } catch (e) {}
+  }
+
+  var toggle = document.getElementById('lang-toggle');
+  var current = 'en';
+  try { current = localStorage.getItem('purely-site-lang') || 'en'; } catch (e) {}
+  apply(current);
+  toggle.addEventListener('click', function(){
+    current = current === 'en' ? 'he' : 'en';
+    apply(current);
+  });
+})();
+</script>

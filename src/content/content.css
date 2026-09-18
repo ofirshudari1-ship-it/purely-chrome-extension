@@ -1,0 +1,157 @@
+/* Purely - styles injected into the page while cleaning */
+
+[data-purely-hidden="1"] {
+  display: none !important;
+}
+
+/* Reader mode - comfortable reading/printing typography */
+.purely-reader-container {
+  --purely-reader-font-size: 17px;
+  --purely-reader-line-height: 1.7;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  font-family: "Segoe UI", Arial, "Heebo", sans-serif;
+  line-height: var(--purely-reader-line-height);
+  font-size: var(--purely-reader-font-size);
+  color: #1a1a1a;
+  background: #ffffff;
+}
+
+.purely-reader-container h1.purely-reader-title {
+  font-size: 28px;
+  line-height: 1.35;
+  margin: 0 0 8px;
+}
+
+.purely-reader-container .purely-reader-meta {
+  color: #6b6b6b;
+  font-size: 13px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: 16px;
+}
+
+.purely-reader-container img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Comfortable reading for users browsing with a dark OS theme */
+@media (prefers-color-scheme: dark) {
+  .purely-reader-container {
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+  .purely-reader-container .purely-reader-meta {
+    color: #94a3b8;
+    border-bottom-color: #334155;
+  }
+}
+
+/* "Pick element to remove" tool - hover highlight while active */
+body.purely-picker-mode,
+body.purely-picker-mode * {
+  cursor: crosshair !important;
+}
+
+.purely-picker-hover {
+  outline: 2px solid #f59e0b !important;
+  outline-offset: -2px;
+  background-color: rgba(245, 158, 11, 0.15) !important;
+}
+
+#purely-picker-banner,
+#purely-picker-toast {
+  all: initial;
+  position: fixed;
+  z-index: 2147483647;
+  font-family: "Segoe UI", Arial, "Heebo", sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  pointer-events: none;
+}
+
+#purely-picker-banner {
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1a1a2e;
+}
+
+#purely-picker-toast {
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0d9488;
+  animation: purely-toast-in 0.18s ease-out;
+}
+
+@keyframes purely-toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(6px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Header/footer for PDF branding */
+#purely-print-header,
+#purely-print-footer {
+  display: none;
+}
+
+@media print {
+  /* always white background and dark text when printing, even in dark mode */
+  .purely-reader-container {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+  }
+
+  .purely-reader-container .purely-reader-meta {
+    color: #6b6b6b !important;
+    border-bottom-color: #e5e5e5 !important;
+  }
+
+  #purely-print-header {
+    display: flex !important;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    font-family: Arial, sans-serif;
+  }
+
+  #purely-print-header img {
+    height: 28px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  #purely-print-header .purely-header-text {
+    font-size: 13px;
+    color: #333;
+  }
+
+  #purely-print-header .purely-header-title {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  #purely-print-footer {
+    display: block !important;
+    border-top: 1px solid #ccc;
+    padding-top: 6px;
+    margin-top: 16px;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    color: #666;
+    text-align: center;
+  }
+
+  .purely-no-print {
+    display: none !important;
+  }
+}

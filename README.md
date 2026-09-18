@@ -1,149 +1,34 @@
-# Purely - Clean Pages for Print & PDF
+# Purely
 
-A Chrome extension that strips ads, navigation bars, pop-ups and banners from any web page,
-then gets it ready for printing or a clean PDF export - with optional logo branding.
-Runs entirely locally in the browser, no external servers.
+**Strip ads, navigation bars, pop-ups and clutter from any web page before you print it or export it as a PDF.**
 
-Current version: **1.5.0** (see [CHANGELOG.md](CHANGELOG.md)). The UI defaults to English and
-can be switched to Hebrew at any time from the small **EN / עב** toggle in the popup, settings,
-welcome and help pages - the choice is remembered and applied everywhere immediately. Appearance
-(Light/Dark/System) is independently switchable from Settings → Appearance.
+## What it does
 
-## Documentation map
+Purely cleans up a web page in your browser — removing ads, navigation menus, pop-ups, cookie banners, social-share widgets, and comment sections — so what you print or save as a PDF is just the content you actually wanted. It offers two modes: "Declutter only" (keeps the page's original layout, just removes the junk) or "Reader mode" (rebuilds the article into a clean, readable view, similar to a browser reader view). You can add a logo and custom header/footer text that appear only in the printed or exported version, fine-tune what gets removed with custom rules per site, and click any leftover element to remove it manually. The interface is bilingual (English and Hebrew) with light, dark, and system appearance themes.
 
-This README is the entry point. For anything deeper, go to:
+## Install
 
-| Document | What's in it |
-|---|---|
-| [SPEC.md](SPEC.md) | **Quick-reference spec** - architecture, data/privacy summary, known deviations from the shared tool standard. |
-| [docs/מסמך_אפיון.md](docs/מסמך_אפיון.md) | **Expanded spec** - the problem, the solution, why it's worth using, competitive research, full feature list, architecture, privacy/security deep-dive, permissions, roadmap, business Q&A. (Hebrew) |
-| [docs/התקנה.md](docs/התקנה.md) | **Installation guide** - step-by-step, plus updating, uninstalling, and troubleshooting. (Hebrew) |
-| [site/index.html](site/index.html) | **Marketing / landing page** - a shareable, self-contained one-pager explaining Purely to a new audience. Open it directly in a browser. |
-| [PRIVACY.md](PRIVACY.md) | **Privacy policy** (EN+HE) - what data is collected (none, beyond local settings) and why each permission is needed. |
-| [store/LISTING.md](store/LISTING.md) | Chrome Web Store listing copy (EN+HE) and submission asset checklist. |
-| [CHANGELOG.md](CHANGELOG.md) | **Version history** - what changed in every release, and why. |
-| [tests/test-suite.html](tests/test-suite.html) | Automated test suite for the core logic (see [Tests](#tests) below). |
+Purely is not published on the Chrome Web Store, so installation is manual and there is no automatic update:
 
-## Installation
+1. Download the latest `.zip` from the [Releases page](https://github.com/ofirshudari1-ship-it/purely-chrome-extension/releases/latest).
+2. Extract the zip to a folder you'll keep on your computer.
+3. Open `chrome://extensions` in Chrome.
+4. Turn on **Developer mode** (toggle in the top-right corner).
+5. Click **Load unpacked** and select the folder you extracted.
 
-Chrome only allows installing an extension that isn't from the Web Store via its built-in
-"Developer mode" flow - there's no separate installer file for a Chrome extension, so this is
-the one way to install Purely locally:
+Because this isn't a Chrome Web Store install, Chrome will never update it automatically. To get a new version later, download the new release zip and repeat the steps above.
 
-1. Unzip `Purely-v<version>.zip` (or use this project folder directly if you already have it),
-   and open Chrome to `chrome://extensions`
-2. Turn on **"Developer mode"** (top-right toggle)
-3. Click **"Load unpacked"**
-4. Select the project's root folder - the one containing `manifest.json` directly
-5. Pin the Purely icon to the toolbar via the puzzle-piece icon 🧩 if it's not visible
+## Key features
 
-## Usage
-
-- **Quick clean:** click the Purely icon in the toolbar → turn on "Clean this page".
-- **Export a PDF:** in the same popup, click "Export clean PDF" - the page is cleaned
-  automatically and Chrome's print dialog opens; choose "Save as PDF" as the destination.
-- **Right-click menu:** right-clicking any page also shows "Clean this page" / "Clean & Print" /
-  "Restore original page".
-- **Keyboard shortcuts:** `Ctrl+Shift+K` to clean quickly, `Ctrl+Shift+P` to clean + open print.
-- **Restore:** if cleaning hid something you wanted to keep, click "Restore original page" -
-  instant and fully reversible.
-- **Help:** click "Help" in the popup (or the Help pill in Settings) for a full FAQ, keyboard
-  shortcut reference, and troubleshooting tips.
-
-## Settings
-
-Click "Settings" in the popup, or right-click the extension icon → "Options". From there you can:
-
-- Toggle categories to clean (ads, navigation, pop-ups, cookie banners, social share, comments...)
-- Choose the default mode: "Declutter only" (keeps layout) or "Reader mode" (rebuilt reading view)
-- Add custom CSS selectors per site ("Always remove" / "Always keep")
-- Set up domains that get cleaned **automatically** on every load (requires a one-time permission)
-- Upload a **logo** and header/footer text that appear only in the printed/PDF version
-- Switch the UI language between English and Hebrew
-
-## Project structure
-
-```
-Purely - Chrome Extension/
-├── manifest.json               MV3 entry point
-├── Purely-v<version>.zip        Final packaged extension - single ZIP, root of the project
-├── README.md                   This file - the entry point
-├── SPEC.md                      Quick-reference spec (English)
-├── PRIVACY.md                   Privacy policy (EN+HE)
-├── CHANGELOG.md                 Version history
-├── docs/
-│   ├── מסמך_אפיון.md              Expanded spec: problem, solution, architecture, privacy, roadmap
-│   └── התקנה.md                   Standalone installation guide
-├── site/
-│   └── index.html                Marketing / landing page (self-contained, open directly)
-├── store/
-│   └── LISTING.md                 Chrome Web Store listing copy + submission asset checklist
-├── tests/
-│   └── test-suite.html           Automated test suite for the cleaning/reader/branding/i18n logic
-├── build/
-│   └── build.ps1                  Packages the extension into Purely-v<version>.zip at the root
-├── assets/
-│   └── icons/                     Brand icons (16/32/48/128 + master)
-└── src/
-    ├── background.js             Service worker - menus, shortcuts, script injection, update lifecycle
-    ├── shared/
-    │   ├── selectors.js            Default cleaning selector lists + settings schema/merge + validation
-    │   ├── i18n.js                 In-app English/Hebrew dictionary and translation helper
-    │   └── readability.js          Local "Smart Reader" content-scoring engine (no AI/cloud service)
-    ├── content/
-    │   ├── content.js               Cleaning / reader-mode / PDF-branding logic that runs on the page
-    │   ├── content.css              Hiding styles, reader-mode typography (incl. dark mode), print header/footer
-    │   └── auto-clean.js            Only runs on domains added to "auto-clean"
-    ├── popup/                      Quick-action popup (dark mode, loading spinners, language switch)
-    ├── options/                    Full settings page (validation, quick-nav, unsaved-changes indicator)
-    ├── welcome/                    First-run "Welcome" page, opened automatically on install
-    └── help/                       In-app Help & FAQ page (getting started, shortcuts, troubleshooting)
-```
-
-## Packaging (ZIP)
-
-```powershell
-cd "build"
-./build.ps1
-```
-
-This packages `manifest.json` + `src/` + `assets/` into `Purely-v<version>.zip` in the **project
-root** - ready for Chrome Web Store upload, or to hand to someone else to unzip and "Load
-unpacked" themselves. The script also removes any older `Purely-v*.zip` left in the root first,
-so there is never more than one package file at a time.
-
-## Updating without reinstalling
-
-Because Purely is loaded as an unpacked extension, updating never requires removing it first:
-just replace the contents of whatever folder you originally pointed "Load unpacked" at with the
-new version's files, then click the small reload icon (⟳) on Purely's card at
-`chrome://extensions`.
-
-All settings, the logo, custom selectors, auto-clean domains and the chosen language are stored
-in `chrome.storage.local` and are completely unaffected by that - only the code changes.
+- **Clean this page**: one click (or `Ctrl+Shift+K`) removes ads, navigation, pop-ups, cookie banners, social widgets and comments from the current page.
+- **Export a clean PDF**: cleans the page and opens the browser's print dialog in one step (`Ctrl+Shift+P`) — choose "Save as PDF" as the destination.
+- **Reader mode**: rebuilds an article into a clean, typography-focused reading view, with adjustable text size and line spacing.
+- **Pick element to remove**: click-to-exclude any element the automatic cleanup misses, right on the page.
+- **Per-site memory**: elements you've picked, and domains you've marked for automatic cleaning, are remembered and reapplied the next time you visit that site.
+- **Custom branding for printed/PDF output**: add a logo and header/footer text that appears only in the printed or exported version, never on the live page.
+- **Fully reversible**: "Restore original page" instantly undoes any cleaning with no page reload needed.
+- **Custom selectors**: add your own CSS rules to always remove or always keep specific elements on specific sites.
 
 ## Privacy
 
-Purely never sends any data to an external server. All cleaning happens inside the browser, and
-settings (including the logo) are stored only on the user's computer via `chrome.storage.local`.
-No analytics, no tracking, no ads. Full policy: [PRIVACY.md](PRIVACY.md).
-
-## Tests
-
-A standalone test suite (not bundled into the shipped extension) exercises the cleaning / reader
-mode / branding / i18n logic at the function level, without needing an actual install:
-
-```powershell
-python -m http.server 8791
-# then open: http://localhost:8791/tests/test-suite.html
-```
-
-Any static file server works (the page must be loaded over HTTP, not `file://`, so the scripts
-load correctly). All rows should show green (PASS).
-
-## Ideas for a future version
-
-- Fully automatic PDF export (skipping the print dialog) via the Chrome DevTools Protocol.
-- Further reader-mode refinements (hero image detection, subheadings, estimated reading time).
-- Per-site saved profiles (e.g. always "Reader mode" on blogs, "Declutter only" on booking sites).
-- Publish to the Chrome Web Store for one-click install and automatic updates.
+Purely runs entirely locally in your browser — it never sends any data to an external server, and there is no AI or cloud service involved at all. All page cleaning and reader-mode processing happens on-device. Your settings, custom selectors, auto-clean domain list, and uploaded logo are stored only on your own computer via `chrome.storage.local`. There is no analytics and no tracking.

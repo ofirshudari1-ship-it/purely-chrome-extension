@@ -1,0 +1,53 @@
+{
+  "manifest_version": 3,
+  "name": "Purely – Clean Pages for Print & PDF",
+  "short_name": "Purely",
+  "version": "1.5.0",
+  "description": "Strips ads, navigation bars and pop-ups from any web page, then gets it ready for printing or a clean PDF export - with optional logo branding.",
+  "icons": {
+    "16": "assets/icons/icon16.png",
+    "32": "assets/icons/icon32.png",
+    "48": "assets/icons/icon48.png",
+    "128": "assets/icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_icon": {
+      "16": "assets/icons/icon16.png",
+      "32": "assets/icons/icon32.png",
+      "48": "assets/icons/icon48.png",
+      "128": "assets/icons/icon128.png"
+    },
+    "default_title": "Purely – clean this page before print or PDF"
+  },
+  "options_page": "src/options/options.html",
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "notifications"
+  ],
+  "optional_host_permissions": [
+    "<all_urls>"
+  ],
+  "commands": {
+    "clean-page": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "Command+Shift+K"
+      },
+      "description": "Clean the current page"
+    },
+    "clean-and-print": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+P",
+        "mac": "Command+Shift+P"
+      },
+      "description": "Clean & Print / Export PDF"
+    }
+  }
+}

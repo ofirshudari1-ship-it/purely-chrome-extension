@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Purely - Test Suite</title>
+<style>
+  body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+  #report { max-width: 760px; margin: 0 auto; padding: 24px; }
+  h1 { font-size: 20px; }
+  .summary { font-size: 15px; margin-bottom: 16px; padding: 10px 14px; border-radius: 8px; }
+  .summary.all-pass { background: #064e3b; color: #a7f3d0; }
+  .summary.has-fail { background: #7f1d1d; color: #fecaca; }
+  .test-row { padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-size: 13.5px; }
+  .test-row.pass { background: #14251f; border-right: 4px solid #10b981; }
+  .test-row.fail { background: #2a1414; border-right: 4px solid #ef4444; }
+  .test-row .name { font-weight: 600; }
+  .test-row .error { color: #fca5a5; margin-top: 4px; font-family: monospace; font-size: 12px; white-space: pre-wrap; }
+  #fixtureHost { display: none; }
+</style>
+</head>
+<body>
+<div id="report">
+  <h1>Purely - Automated Test Suite</h1>
+  <div id="summary" class="summary">מריץ בדיקות...</div>
+  <div id="results"></div>
+</div>
+
+<script>
+  // --- Mock chrome extension APIs so content.js can run in a plain page ---
+  window.__TEST_SETTINGS__ = null;
+  window.chrome = {
+    storage: {
+      local: {
+        get: function (defaults, cb) {
+          const value = window.__TEST_SETTINGS__ || (defaults && defaults.purelySettings) || {};
+          const result = { purelySettings: value };
+          if (cb) return cb(result);
+          return Promise.resolve(result);
+        }
+      }
+    }
+  };
+
+  const FIXTURE_WITH_ARTICLE = `
+    <header class="site-header">SITE HEADER</header>
+    <nav class="navbar">Home | About | Contact</nav>
+    <div class="ad-banner">ADVERTISEMENT</div>
+    <div class="cookie-consent-banner">עוגיות <button>אישור</button></div>
+    <aside class="sidebar"><p>סרגל צד</p></aside>
+    <article>
+      <h1>כותרת המאמר החשוב</h1>
+      <p>פסקה ראשונה עם תוכן ארוך מספיק כדי שהמנוע יזהה את זה כתוכן העיקרי בעמוד ולא כרעש רקע כלשהו.</p>
+      <p>פסקה שנייה ממשיכה את הרעיון עם עוד מידע רלוונטי לנושא המאמר הנוכחי שלנו כאן בעמוד הבדיקה.</p>
+      <p>פסקה שלישית מסכמת את הנקודות העיקריות ומספקת מסקנה ברורה וסופית לקורא של הכתבה הזו.</p>
+    </article>
+    <div class="social-share-buttons">שתף</div>
+    <div id="comments"><p>תגובה כלשהי</p></div>
+    <div class="related-posts-widget"><p>כתבות קשורות</p></div>
+    <footer class="site-footer">Footer</footer>
+  `;
+
+  const FIXTURE_NO_ARTICLE_TAG = `
+    <header class="site-header">SITE HEADER</header>
+    <div class="wrapper">
+      <div class="maybe-content">
+        <p>פסקה ראשונה בעמוד שאין בו תגית article או main כלל, רק חטיבות div רגילות עם תוכן טקסטואלי ארוך.</p>
+        <p>פסקה שנייה עם עוד תוכן טקסטואלי ארוך כדי שניקוד הצפיפות יזהה את החטיבה הזו כתוכן המרכזי בעמוד.</p>
+        <p>פסקה שלישית שמוסיפה עוד הקשר לבדיקה, כדי לוודא שהניקוד עדיף על פני קישורי ניווט קצרים.</p>
+      </div>
+      <div class="link-farm">
+        <a href="#">קישור 1</a> <a href="#">קישור 2</a> <a href="#">קישור 3</a> <a href="#">קישור 4</a>
+      </div>
+    </div>
+  `;
+
+  // No <article>/<main> tag - forces the scoring engine (not the tag-shortcut) to run.
+  // Includes og:title, a byline and a published-date <time> element, plus a link-heavy
+  // sidebar (negative class name) that should lose to the real post body (positive class name).
+  const FIXTURE_SCORING_CHALLENGE = `
+    <meta property="og:title" content="הכותרת האמיתית מה-og:title">
+    <div class="site-wrapper">
+      <div class="widget sidebar-nav">
+        <p><a href="#">קישור תפריט אחד</a> <a href="#">קישור תפריט שתיים</a> קצת טקסט קצר בין הקישורים בסרגל הצד.</p>
+        <p><a href="#">עוד קישור</a> <a href="#">ועוד אחד</a> טקסט קצר נוסף שרובו קישורים ולא תוכן אמיתי.</p>
+      </div>
+      <div class="post-body">
+        <span class="byline">מאת דנה כהן</span>
+        <time datetime="2026-03-04T10:00:00Z">4 במרץ 2026</time>
+        <p>זוהי הפסקה הראשונה של גוף הכתבה האמיתית, עם תוכן ארוך ועשיר שאמור לנצח את סרגל הצד בניקוד.</p>
+        <p>פסקה שנייה ממשיכה לפתח את הנושא המרכזי של הכתבה, עם עוד מידע רלוונטי ומספר פסיקים, כמו כאן, וכאן.</p>
+        <p>פסקה שלישית מסכמת את הכתבה ומוודאת שיש מספיק תוכן מצטבר כדי שהניקוד הכולל יעלה על סרגל הצד.</p>
+      </div>
+      <div class="comments-widget">
+        <p>תגובה של גולש כלשהו שלא אמורה להיחשב כחלק מגוף הכתבה העיקרי.</p>
+      </div>
+    </div>
+  `;
+
+  const results = [];
+
+  function assert(cond, msg) {
+    if (!cond) throw new Error(msg || 'assertion failed');
+  }
+
+  function assertEqual(actual, expected, label) {
+    if (actual !== expected) {
+      throw new Error(`${label || 'value mismatch'}: expected ${JSON.stringify(expected)}, got ${JSON.stringify(actual)}`);
+    }
+  }
+
+  function resetFixture(html) {
+    document.body.innerHTML = html;
+    delete window.__PURELY__;
+  }
+
+  // Busts the browser's HTTP cache for every script this harness loads, so re-running
+  // the suite right after editing a source file always exercises the latest code
+  // instead of a stale cached copy (python's http.server sends no cache-control headers,
+  // which otherwise leaves Chrome free to apply heuristic caching).
+  const CACHE_BUST = Date.now();
+
+  function loadContentScript() {
+    return new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = '../src/content/content.js?v=' + CACHE_BUST;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.body.appendChild(s);
+    });
+  }
+
+  async function withFixture(fixtureHtml, settings) {
+    resetFixture(fixtureHtml);
+    window.__TEST_SETTINGS__ = settings;
+    await loadContentScript();
+  }
+
+  function baseSettings(overrides) {
+    const base = {
+      language: 'en',
+      categories: { ads: true, nav: true, sidebar: false, popups: true, cookie: true, social: true, comments: false, related: true, sticky: true, footer: false, media: true },
+      mode: 'declutter',
+      autoCleanDomains: [],
+      customRemoveSelectors: '',
+      customKeepSelectors: '',
+      branding: { logoDataUrl: '', headerText: '', footerText: '', showDate: true, showUrl: true, showPageTitle: true }
+    };
+    return Object.assign(base, overrides);
+  }
+
+  async function runTest(name, fn) {
+    try {
+      await fn();
+      results.push({ name, pass: true });
+    } catch (err) {
+      results.push({ name, pass: false, error: String((err && err.message) || err) });
+    }
+  }
+
+  function normalizeDomain(value) {
+    // עותק מקומי של הלוגיקה מ-options.js, לבדיקת יחידה טהורה
+    return value
+      .trim()
+      .replace(/^https?:\/\//i, '')
+      .replace(/^www\./i, '')
+      .replace(/\/.*$/, '')
+      .toLowerCase();
+  }
+
+  // עותק מקומי של הבדיקה מ-options.js, לבדיקת יחידה טהורה
+  const DOMAIN_RE = /^[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9-]{0,61}[a-z0-9])?)+$/i;
+  function isValidDomain(value) {
+    return DOMAIN_RE.test(value);
+  }
+
+  async function loadHeadScript(src) {
+    return new Promise((resolve) => {
+      const s = document.createElement('script');
+      s.src = src + '?v=' + CACHE_BUST;
+      s.onload = resolve;
+      document.head.appendChild(s);
+    });
+  }
+
+  async function runAllTests() {
+    await loadHeadScript('../src/shared/selectors.js');
+    await loadHeadScript('../src/shared/i18n.js');
+    await loadHeadScript('../src/shared/readability.js');
+
+    await runTest('ניקוי ברירת מחדל מסתיר בדיוק 6 אלמנטים (nav+header, ad, cookie, social, related)', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings());
+      const res = await window.__PURELY_RUN__('clean');
+      assertEqual(res.hiddenCount, 6, 'hiddenCount');
+      assertEqual(document.querySelector('.sidebar').hasAttribute('data-purely-hidden'), false, 'sidebar should stay visible (category off)');
+      assertEqual(document.querySelector('#comments').hasAttribute('data-purely-hidden'), false, 'comments should stay visible (category off)');
+    });
+
+    await runTest('בורר "השאר תמיד" חוסם הסרה גם כשהקטגוריה מסומנת', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings({ customKeepSelectors: '.ad-banner' }));
+      const res = await window.__PURELY_RUN__('clean');
+      assertEqual(res.hiddenCount, 5, 'hiddenCount should drop by 1');
+      assertEqual(document.querySelector('.ad-banner').hasAttribute('data-purely-hidden'), false, 'ad-banner should be kept');
+    });
+
+    await runTest('בורר "הסר תמיד" מוסיף אלמנט שלא מכוסה בקטגוריות', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings({ customRemoveSelectors: '#comments' }));
+      const res = await window.__PURELY_RUN__('clean');
+      assertEqual(res.hiddenCount, 7, 'hiddenCount should include comments too');
+      assertEqual(document.querySelector('#comments').hasAttribute('data-purely-hidden'), true, 'comments should now be hidden');
+    });
+
+    await runTest('בורר CSS לא תקין לא גורם לקריסה, ושאר הבוררים ממשיכים לעבוד', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings({ customRemoveSelectors: ':::invalid:::\n#comments' }));
+      const res = await window.__PURELY_RUN__('clean');
+      assertEqual(res.hiddenCount, 7, 'hiddenCount should still count the valid custom selector');
+    });
+
+    await runTest('שחזור מחזיר את כל האלמנטים לגלויים', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings());
+      await window.__PURELY_RUN__('clean');
+      const restoreRes = await window.__PURELY_RUN__('restore');
+      assertEqual(restoreRes.cleaned, false, 'cleaned flag after restore');
+      assertEqual(document.querySelectorAll('[data-purely-hidden="1"]').length, 0, 'no hidden elements should remain');
+    });
+
+    await runTest('מצב "קורא נקי" מציג כותרת פעם אחת בלבד (ללא כפילות)', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings({ mode: 'reader' }));
+      await window.__PURELY_RUN__('clean');
+      assertEqual(document.querySelectorAll('h1').length, 1, 'should be exactly one h1');
+      assert(!!document.querySelector('.purely-reader-container'), 'reader container should exist');
+      assert(document.body.innerText.includes('פסקה ראשונה'), 'article text should be preserved');
+    });
+
+    await runTest('מצב "קורא נקי" נופל חזרה לניקוד היוריסטי כשאין article/main', async () => {
+      await withFixture(FIXTURE_NO_ARTICLE_TAG, baseSettings({ mode: 'reader' }));
+      await window.__PURELY_RUN__('clean');
+      assert(!!document.querySelector('.purely-reader-container'), 'reader container should exist');
+      assert(document.body.innerText.includes('פסקה שנייה'), 'high-density paragraph div should have been selected as main content');
+      assert(!document.body.innerText.includes('קישור 1'), 'low-density link farm should not be selected as main content');
+    });
+
+    await runTest('Smart Reader מעדיף את גוף הכתבה (class חיובי) על פני סרגל צד עתיר-קישורים (class שלילי)', async () => {
+      await withFixture(FIXTURE_SCORING_CHALLENGE, baseSettings({ mode: 'reader' }));
+      await window.__PURELY_RUN__('clean');
+      assert(document.body.innerText.includes('הפסקה הראשונה של גוף הכתבה'), 'real post body should be selected');
+      assert(!document.body.innerText.includes('קישור תפריט'), 'link-heavy sidebar should not be selected');
+      assert(!document.body.innerText.includes('תגובה של גולש'), 'comments widget should not be selected');
+    });
+
+    await runTest('Smart Reader שולף כותרת מ-og:title כשהיא זמינה', async () => {
+      await withFixture(FIXTURE_SCORING_CHALLENGE, baseSettings({ mode: 'reader' }));
+      await window.__PURELY_RUN__('clean');
+      const title = document.querySelector('.purely-reader-title');
+      assertEqual(title.textContent, 'הכותרת האמיתית מה-og:title', 'title should come from og:title meta tag');
+    });
+
+    await runTest('Smart Reader שולף byline ותאריך פרסום לתוך שורת המטא', async () => {
+      await withFixture(FIXTURE_SCORING_CHALLENGE, baseSettings({ mode: 'reader', language: 'en' }));
+      await window.__PURELY_RUN__('clean');
+      const meta = document.querySelector('.purely-reader-meta').textContent;
+      assert(meta.includes('דנה כהן'), 'byline should appear in the meta line: ' + meta);
+      assert(meta.includes('2026'), 'published date year should appear in the meta line: ' + meta);
+    });
+
+    await runTest('prepareForPrint מזריק כותרת/כותרת תחתונה עם פרטי המיתוג הנכונים', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings({
+        branding: { logoDataUrl: '', headerText: 'לוגו החברה שלי', footerText: 'פוטר בדיקה', showDate: true, showUrl: true, showPageTitle: true }
+      }));
+      await window.__PURELY_RUN__('prepareForPrint');
+      const header = document.getElementById('purely-print-header');
+      const footer = document.getElementById('purely-print-footer');
+      assert(!!header, 'header should exist');
+      assert(!!footer, 'footer should exist');
+      assert(header.textContent.includes('לוגו החברה שלי'), 'header should contain custom header text');
+      assertEqual(footer.textContent, 'פוטר בדיקה', 'footer text');
+    });
+
+    await runTest('restore אחרי prepareForPrint מסיר גם את בלוקי המיתוג', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings());
+      await window.__PURELY_RUN__('prepareForPrint');
+      await window.__PURELY_RUN__('restore');
+      assertEqual(document.getElementById('purely-print-header'), null, 'header should be removed');
+      assertEqual(document.getElementById('purely-print-footer'), null, 'footer should be removed');
+    });
+
+    await runTest('footer falls back to the localized default text when footerText is empty', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings({ language: 'en' }));
+      await window.__PURELY_RUN__('prepareForPrint');
+      const footer = document.getElementById('purely-print-footer');
+      assertEqual(footer.textContent, window.PURELY_I18N.t('en', 'options.footerTextPlaceholder'), 'footer should show the English fallback');
+    });
+
+    await runTest('footer fallback text is localized to Hebrew when language=he', async () => {
+      await withFixture(FIXTURE_WITH_ARTICLE, baseSettings({ language: 'he' }));
+      await window.__PURELY_RUN__('prepareForPrint');
+      const footer = document.getElementById('purely-print-footer');
+      assertEqual(footer.textContent, window.PURELY_I18N.t('he', 'options.footerTextPlaceholder'), 'footer should show the Hebrew fallback');
+    });
+
+    await runTest('isValidSelector מזהה נכון בוררים תקינים ולא תקינים', async () => {
+      const isValid = window.PURELY_DEFAULTS.isValidSelector;
+      assertEqual(isValid('.my-class'), true, '.my-class');
+      assertEqual(isValid('#my-id'), true, '#my-id');
+      assertEqual(isValid('div[data-x="1"]'), true, 'attribute selector');
+      assertEqual(isValid('div['), false, 'unterminated attribute selector');
+      assertEqual(isValid(':::bad:::'), false, 'garbage selector');
+      assertEqual(isValid(''), true, 'empty string treated as valid/no-op');
+    });
+
+    await runTest('normalizeDomain מנקה פרוטוקול, www ונתיב', () => {
+      assertEqual(normalizeDomain('https://www.Example.com/path?x=1'), 'example.com', 'full url');
+      assertEqual(normalizeDomain('  example.com  '), 'example.com', 'whitespace');
+      assertEqual(normalizeDomain('http://sub.example.com/'), 'sub.example.com', 'subdomain, trailing slash');
+    });
+
+    await runTest('isValidDomain דוחה תווים חשודים ומקבל דומיינים תקינים', () => {
+      assertEqual(isValidDomain('example.com'), true, 'plain domain');
+      assertEqual(isValidDomain('sub.example.co.il'), true, 'multi-level subdomain');
+      assertEqual(isValidDomain('*'), false, 'bare wildcard');
+      assertEqual(isValidDomain('ev*l.com'), false, 'embedded wildcard');
+      assertEqual(isValidDomain('example'), false, 'no TLD / no dot');
+      assertEqual(isValidDomain('example.com/evil'), false, 'residual path');
+      assertEqual(isValidDomain(''), false, 'empty string');
+    });
+
+    await runTest('mergeSettings ממזג שדות מקוננים במקום להחליף אותם במלואם', () => {
+      const merge = window.PURELY_DEFAULTS.mergeSettings;
+      const defaults = window.PURELY_DEFAULTS.DEFAULT_SETTINGS;
+      // simulates settings saved under an older version, missing a category
+      // that only exists in the current DEFAULT_SETTINGS ("media")
+      const oldStored = {
+        language: 'he',
+        categories: { ads: false, nav: true }, // partial - most keys + "media" missing
+        branding: { headerText: 'שלי' } // partial - most keys missing
+      };
+      const merged = merge(defaults, oldStored);
+      assertEqual(merged.language, 'he', 'top-level override applied');
+      assertEqual(merged.categories.ads, false, 'user override on an existing key kept');
+      assertEqual(merged.categories.nav, true, 'user override on an existing key kept');
+      assertEqual(merged.categories.media, defaults.categories.media, 'missing key falls back to current default instead of disappearing');
+      assertEqual(merged.branding.headerText, 'שלי', 'user override on branding kept');
+      assertEqual(merged.branding.showDate, defaults.branding.showDate, 'missing branding key falls back to current default');
+    });
+
+    renderReport();
+  }
+
+  function renderReport() {
+    resetFixture(''); // מנקה את ה-DOM משאריות בדיקות לפני כתיבת הדוח
+    document.title = 'Purely - Test Suite';
+
+    const reportDiv = document.createElement('div');
+    reportDiv.id = 'report';
+
+    const h1 = document.createElement('h1');
+    h1.textContent = 'Purely - Automated Test Suite';
+    reportDiv.appendChild(h1);
+
+    const passCount = results.filter((r) => r.pass).length;
+    const allPass = passCount === results.length;
+
+    const summary = document.createElement('div');
+    summary.className = 'summary ' + (allPass ? 'all-pass' : 'has-fail');
+    summary.textContent = allPass
+      ? `✓ כל ${results.length} הבדיקות עברו בהצלחה`
+      : `✗ ${results.length - passCount} מתוך ${results.length} בדיקות נכשלו`;
+    reportDiv.appendChild(summary);
+
+    const resultsDiv = document.createElement('div');
+    resultsDiv.id = 'results';
+    results.forEach((r) => {
+      const row = document.createElement('div');
+      row.className = 'test-row ' + (r.pass ? 'pass' : 'fail');
+      const name = document.createElement('div');
+      name.className = 'name';
+      name.textContent = (r.pass ? '✓ ' : '✗ ') + r.name;
+      row.appendChild(name);
+      if (!r.pass) {
+        const err = document.createElement('div');
+        err.className = 'error';
+        err.textContent = r.error;
+        row.appendChild(err);
+      }
+      resultsDiv.appendChild(row);
+    });
+    reportDiv.appendChild(resultsDiv);
+
+    document.body.appendChild(reportDiv);
+
+    const style = document.createElement('style');
+    style.textContent = `
+      body { font-family: "Segoe UI", Arial, sans-serif; margin: 0; background: #0f172a; color: #e2e8f0; }
+      #report { max-width: 760px; margin: 0 auto; padding: 24px; }
+      .summary { font-size: 15px; margin-bottom: 16px; padding: 10px 14px; border-radius: 8px; }
+      .summary.all-pass { background: #064e3b; color: #a7f3d0; }
+      .summary.has-fail { background: #7f1d1d; color: #fecaca; }
+      .test-row { padding: 10px 14px; border-radius: 8px; margin-bottom: 6px; font-size: 13.5px; }
+      .test-row.pass { background: #14251f; border-right: 4px solid #10b981; }
+      .test-row.fail { background: #2a1414; border-right: 4px solid #ef4444; }
+      .test-row .name { font-weight: 600; }
+      .test-row .error { color: #fca5a5; margin-top: 4px; font-family: monospace; font-size: 12px; white-space: pre-wrap; }
+    `;
+    document.head.appendChild(style);
+  }
+
+  runAllTests();
+</script>
+</body>
+</html>

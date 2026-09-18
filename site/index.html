@@ -318,6 +318,21 @@
     .problem-grid{grid-template-columns:1fr;}
   }
 
+  /* ---------- version history ---------- */
+  .history-list{border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--paper-raised);}
+  .history-row{display:flex; align-items:baseline; gap:16px; padding:16px 22px; border-bottom:1px solid var(--line);}
+  .history-row:last-child{border-bottom:none;}
+  .history-row .v{font-family:'JetBrains Mono',monospace; direction:ltr; font-weight:600; font-size:12.5px; color:var(--teal-deep); background:var(--teal-pale); padding:2px 10px; border-radius:999px; flex:none;}
+  .history-row .v.current{background:var(--teal); color:#fff;}
+  .history-row .d{font-family:'JetBrains Mono',monospace; direction:ltr; font-size:11.5px; color:var(--ink-faint); flex:none;}
+  .history-row .t{font-size:14px; color:var(--ink-soft);}
+
+  /* ---------- updates / honesty panel ---------- */
+  .updates-panel{border:1px solid var(--line); border-radius:14px; background:var(--paper-raised); padding:30px 32px;}
+  .updates-panel .warn-badge{display:inline-flex; align-items:center; gap:8px; font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--clutter); background:var(--clutter-pale); padding:5px 12px; border-radius:999px; margin-bottom:16px;}
+  .updates-panel ol{margin:16px 0 0; padding-inline-start:22px; display:flex; flex-direction:column; gap:10px; font-size:14.5px; color:var(--ink-soft);}
+  .updates-panel a.gh-link{font-family:'JetBrains Mono',monospace; direction:ltr; unicode-bidi:isolate; color:var(--teal-deep); background:var(--teal-pale); padding:1px 8px; border-radius:6px; text-decoration:none;}
+
   /* ---------- RTL ---------- */
   [dir="rtl"] .terminal{direction:ltr; text-align:left;}
   [dir="rtl"] .install-steps ol{padding-inline-start:20px;}
@@ -340,9 +355,11 @@
       <a href="#how" id="nav-how">How it works</a>
       <a href="#features" id="nav-features">Features</a>
       <a href="#privacy" id="nav-privacy">Privacy</a>
+      <a href="#updates" id="nav-updates">Updates</a>
       <a href="#install" id="nav-install">Install</a>
     </nav>
     <div style="display:flex; align-items:center; gap:12px;">
+      <a href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension" target="_blank" rel="noopener" class="lang-btn" id="nav-github">GitHub</a>
       <span class="version-pill">v1.5.0</span>
       <button type="button" class="lang-btn" id="lang-toggle" aria-label="Switch language / החלף שפה">EN / עברית</button>
     </div>
@@ -561,6 +578,46 @@
   </div>
 </section>
 
+<section id="history">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" id="history-eyebrow">Version history</span>
+      <h2 id="history-h2">Every release, in order.</h2>
+      <p id="history-p">Full reasoning behind each change lives in <a href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension/blob/master/CHANGELOG.md" target="_blank" rel="noopener" id="history-changelog-link">CHANGELOG.md</a> on GitHub.</p>
+    </div>
+    <div class="history-list">
+      <div class="history-row"><span class="v current">v1.5.0</span><span class="d">2026-09-15</span><span class="t" id="hist-150">Reader-mode typography controls, "Pick element to remove" tool, per-site memory for picked elements, Reader-mode performance fix.</span></div>
+      <div class="history-row"><span class="v">v1.4.0</span><span class="d">2026-09-14</span><span class="t" id="hist-140">Light/Dark/System theming, per-site mode memory, single-query declutter performance pass, i18n balanced at 148 keys.</span></div>
+      <div class="history-row"><span class="v">v1.3.0</span><span class="d">2026-09-06</span><span class="t" id="hist-130">Smarter local Reader mode, security hardening, more robust data handling.</span></div>
+      <div class="history-row"><span class="v">v1.2.0</span><span class="d">2026-09-05</span><span class="t" id="hist-120">Rebrand, bilingual EN/HE UI with full RTL, Help page, easy installer.</span></div>
+      <div class="history-row"><span class="v">v1.1.0</span><span class="d">2026-09-05</span><span class="t" id="hist-110">UI/UX and reliability improvements.</span></div>
+      <div class="history-row"><span class="v">v1.0.0</span><span class="d">2026-09-05</span><span class="t" id="hist-100">Initial release - ad/nav/pop-up/cookie-banner removal and clean PDF export.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="updates">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow" id="updates-eyebrow">Updates</span>
+      <h2 id="updates-h2">There is no auto-update yet - here's the real story.</h2>
+    </div>
+    <div class="updates-panel">
+      <span class="warn-badge" id="updates-badge">⚠ manual updates only</span>
+      <p style="margin:0; font-size:15.5px; color:var(--ink);" id="updates-lede">
+        <strong>Purely does not update itself.</strong> Chrome only auto-updates extensions installed from the Chrome Web Store, via an <code>update_url</code> that Google controls. Purely is installed in Developer mode ("Load unpacked"), which has no update mechanism at all - Chrome never checks for a newer version.
+      </p>
+      <p style="margin:14px 0 0; font-size:14px; color:var(--ink-soft);" id="updates-steps-lede">To move to a new version:</p>
+      <ol>
+        <li id="updates-step1">Go to <a class="gh-link" href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension/releases" target="_blank" rel="noopener">github.com/ofirshudari1-ship-it/purely-chrome-extension/releases</a> and download the new version's zip.</li>
+        <li id="updates-step2">Open <code class="mono">chrome://extensions</code> and remove the old Purely entry.</li>
+        <li id="updates-step3">Unzip the new download and click <strong>Load unpacked</strong> on the extracted folder.</li>
+      </ol>
+      <p style="margin-top:16px; font-size:13px; color:var(--ink-faint);" id="updates-footnote">If/when Purely publishes to the Chrome Web Store, this changes - updates would then install automatically like any Web Store extension. Until then, this is the only way.</p>
+    </div>
+  </div>
+</section>
+
 <section id="install">
   <div class="wrap">
     <div class="section-head">
@@ -604,7 +661,9 @@
       <a href="#features" id="f-nav-features">Features</a>
       <a href="#privacy" id="f-nav-privacy">Privacy</a>
       <a href="../PRIVACY.md" id="f-nav-privacy-policy">Privacy Policy</a>
+      <a href="#updates" id="f-nav-updates">Updates</a>
       <a href="#install" id="f-nav-install">Install</a>
+      <a href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension" target="_blank" rel="noopener" id="f-nav-github">GitHub</a>
     </div>
   </div>
 </footer>
@@ -616,6 +675,7 @@
     'nav-how': ['How it works', 'איך זה עובד'],
     'nav-features': ['Features', 'יכולות'],
     'nav-privacy': ['Privacy', 'פרטיות'],
+    'nav-updates': ['Updates', 'עדכונים'],
     'nav-install': ['Install', 'התקנה'],
     'hero-eyebrow': ['A Chrome extension for print & PDF', 'תוסף Chrome להדפסה ו-PDF'],
     'hero-lede': [
@@ -693,6 +753,23 @@
     'pv-node3': ['Print dialog', 'חלון הדפסה'],
     'pv-server': ['external server', 'שרת חיצוני'],
     'pv-never': ['never contacted', 'לעולם לא נוצר קשר'],
+    'history-eyebrow': ['Version history', 'היסטוריית גרסאות'],
+    'history-h2': ['Every release, in order.', 'כל גרסה, בסדר כרונולוגי.'],
+    'hist-150': ['Reader-mode typography controls, "Pick element to remove" tool, per-site memory for picked elements, Reader-mode performance fix.', 'בקרות טיפוגרפיה במצב קריאה, כלי "בחירת רכיב להסרה", זיכרון לפי אתר לרכיבים שנבחרו, תיקון ביצועים במצב קריאה.'],
+    'hist-140': ['Light/Dark/System theming, per-site mode memory, single-query declutter performance pass, i18n balanced at 148 keys.', 'ערכות נושא בהיר/כהה/מערכת, זיכרון מצב לפי אתר, שיפור ביצועי ניקוי בשאילתת DOM אחת, איזון i18n ל-148 מפתחות.'],
+    'hist-130': ['Smarter local Reader mode, security hardening, more robust data handling.', 'מצב קריאה מקומי חכם יותר, חיזוק אבטחה, טיפול נתונים עמיד יותר.'],
+    'hist-120': ['Rebrand, bilingual EN/HE UI with full RTL, Help page, easy installer.', 'מיתוג מחדש, ממשק דו-לשוני עברית/אנגלית עם RTL מלא, עמוד עזרה, מתקין קל.'],
+    'hist-110': ['UI/UX and reliability improvements.', 'שיפורי חוויית משתמש ואמינות.'],
+    'hist-100': ['Initial release - ad/nav/pop-up/cookie-banner removal and clean PDF export.', 'גרסה ראשונה - הסרת פרסומות/ניווט/פופ-אפים/באנרי עוגיות וייצוא PDF נקי.'],
+    'updates-eyebrow': ['Updates', 'עדכונים'],
+    'updates-h2': ["There is no auto-update yet - here's the real story.", 'עדיין אין עדכון אוטומטי - הנה הסיפור המלא.'],
+    'updates-badge': ['⚠ manual updates only', '⚠ עדכונים ידניים בלבד'],
+    'updates-lede': [
+      'Purely does not update itself. Chrome only auto-updates extensions installed from the Chrome Web Store, via an update_url that Google controls. Purely is installed in Developer mode ("Load unpacked"), which has no update mechanism at all - Chrome never checks for a newer version.',
+      'Purely לא מתעדכן לבד. Chrome מריץ עדכון אוטומטי רק לתוספים שמותקנים מ-Chrome Web Store, דרך update_url שגוגל שולט בו. Purely מותקן במצב מפתחים ("טען פריט בלתי ארוז"), שאין לו שום מנגנון עדכון - Chrome פשוט לא בודק אם קיימת גרסה חדשה.'
+    ],
+    'updates-steps-lede': ['To move to a new version:', 'כדי לעבור לגרסה חדשה:'],
+    'updates-footnote': ['If/when Purely publishes to the Chrome Web Store, this changes - updates would then install automatically like any Web Store extension. Until then, this is the only way.', 'אם/כש-Purely יפורסם ב-Chrome Web Store, זה ישתנה - עדכונים יתקינו את עצמם אוטומטית כמו כל תוסף רגיל בחנות. עד אז, זו הדרך היחידה.'],
     'install-eyebrow': ['Getting started', 'איך מתחילים'],
     'install-h2': ['Installed in under a minute.', 'מותקן תוך פחות מדקה.'],
     'install-p': ["Chrome extensions install through the browser's own Developer mode - there's no separate installer to download or trust.", 'תוספי Chrome מותקנים דרך מצב המפתחים של הדפדפן עצמו - אין מתקין נפרד להוריד או לסמוך עליו.'],
@@ -712,10 +789,30 @@
     'f-nav-features': ['Features', 'יכולות'],
     'f-nav-privacy': ['Privacy', 'פרטיות'],
     'f-nav-privacy-policy': ['Privacy Policy', 'מדיניות פרטיות'],
-    'f-nav-install': ['Install', 'התקנה']
+    'f-nav-updates': ['Updates', 'עדכונים'],
+    'f-nav-install': ['Install', 'התקנה'],
+    'f-nav-github': ['GitHub', 'GitHub']
   };
   // i18-html keys allow static <em>/<br> markup - only ever set from this hardcoded dictionary, never user input
-  var htmlKeys = { 'hero-h1': ['Ads don’t belong<br>on <em>paper.</em>', 'פרסומות לא שייכות<br>ל<em>נייר.</em>'] };
+  var htmlKeys = {
+    'hero-h1': ['Ads don’t belong<br>on <em>paper.</em>', 'פרסומות לא שייכות<br>ל<em>נייר.</em>'],
+    'updates-step1': [
+      'Go to <a class="gh-link" href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension/releases" target="_blank" rel="noopener">github.com/ofirshudari1-ship-it/purely-chrome-extension/releases</a> and download the new version\'s zip.',
+      'נכנסים ל-<a class="gh-link" href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension/releases" target="_blank" rel="noopener">github.com/ofirshudari1-ship-it/purely-chrome-extension/releases</a> ומורידים את קובץ ה-zip של הגרסה החדשה.'
+    ],
+    'updates-step2': [
+      'Open <code class="mono">chrome://extensions</code> and remove the old Purely entry.',
+      'פותחים <code class="mono">chrome://extensions</code> ומסירים את הרשומה הישנה של Purely.'
+    ],
+    'updates-step3': [
+      'Unzip the new download and click <strong>Load unpacked</strong> on the extracted folder.',
+      'מחלצים את ההורדה החדשה ולוחצים <strong>"טען פריט בלתי ארוז"</strong> על התיקייה המחולצת.'
+    ],
+    'history-p': [
+      'Full reasoning behind each change lives in <a href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension/blob/master/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG.md</a> on GitHub.',
+      'הנימוקים המלאים לכל שינוי נמצאים בקובץ <a href="https://github.com/ofirshudari1-ship-it/purely-chrome-extension/blob/master/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG.md</a> ב-GitHub.'
+    ]
+  };
 
   function apply(lang){
     var idx = lang === 'he' ? 1 : 0;
